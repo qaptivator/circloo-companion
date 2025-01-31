@@ -339,29 +339,28 @@ async function fetchLevels() {
 
 	// searchQuery
 	if (searchQuery.value) {
-		//if (searchMode.value?.value === 'creator')
-		// rookie mistake 2: append just the ref instead of its value
-		query += searchQuery.value
+		if (searchMode.value?.value === 'creator') {
+			query += `Levels by ${searchQuery.value}`
+		} else {
+			// rookie mistake 2: append just the ref instead of its value
+			query += searchQuery.value
+		}
 	}
 
 	let levels: Level[] = []
 
-	if (searchMode.value?.value === 'name') {
+	console.log('query:', query)
+
+	if (
+		searchMode.value?.value === 'name' ||
+		searchMode.value?.value === 'creator'
+	) {
 		levels = await getLevels(
 			SortMode.Search,
 			realPage.value,
 			itemsPerPage.value > 0 ? itemsPerPage.value ?? 10 : 10,
 			showAllLevels.value ? Spec.All : Spec.Modded,
 			query
-		)
-	} else if (searchMode.value?.value === 'creator') {
-		console.log(`Levels by ${query}`)
-		levels = await getLevels(
-			SortMode.Search,
-			realPage.value,
-			itemsPerPage.value > 0 ? itemsPerPage.value ?? 10 : 10,
-			showAllLevels.value ? Spec.All : Spec.Modded,
-			`Levels by ${query}`
 		)
 	} else if (searchMode.value?.value === 'id') {
 		levels = await getLevelsById([query])
