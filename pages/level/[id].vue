@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="w-full h-full">
 		<div
 			v-if="loading && !notFound"
 			class="flex space-x-8 w-full h-full"
@@ -16,8 +16,15 @@
 		</div>
 		<div
 			v-if="!loading && notFound"
-			class="flex space-x-8 w-full h-full"
-		></div>
+			class="flex flex-col items-center justify-center h-full"
+		>
+			<h1 class="text-4xl mb-4">Level not found</h1>
+			<Button
+				as="router-link"
+				label="Go back"
+				to="/browse"
+			></Button>
+		</div>
 		<div
 			v-if="!loading && !notFound"
 			class="flex space-x-8 w-full h-full"
@@ -27,7 +34,7 @@
 				class="!w-96 !h-96"
 			/>
 			<div
-				class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-200 w-full h-full p-8 text-xl"
+				class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-100 w-full h-full p-8 text-xl"
 			>
 				<h1 class="font-bold text-3xl">{{ level?.name }}</h1>
 				<h2 class="opacity-50">by {{ level?.creator }}</h2>
@@ -50,6 +57,8 @@
 						>{{ level?.walkthroughLink }}</a
 					>
 				</p>
+				<!-- TODO: add the download thumbnail button -->
+				<!-- TODO: add the download button with an api check for blacklisted levels (requested by creator) -->
 				<!-- TODO: add the leaderboard -->
 				<!-- TODO: add the "more levels by <creator>" button. for that i need to handle params in browse.vue -->
 				<div class="mt-8 grid grid-rows-2 grid-cols-3 gap-8 w-fit">
@@ -153,6 +162,7 @@ onMounted(async () => {
 	if (Array.isArray(levelId)) {
 		levelId = levelId[0]
 	}
+
 	// im turning it from "definitely string" or "possibly an array" into "definitely an array" lol
 	const levels = await getLevelsById([levelId])
 

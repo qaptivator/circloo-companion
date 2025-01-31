@@ -10,6 +10,7 @@
 		<div
 			class="w-full h-full absolute top-0 left-0 flex flex-col justify-center items-center text-black text-sm"
 		>
+			<!-- TODO: fix the name overflowing -->
 			<h1 class="font-bold">{{ props.level?.name }}</h1>
 			<!-- TODO: make this text smaller -->
 			<span>{{ props.level?.creator }}</span>

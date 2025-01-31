@@ -2,7 +2,7 @@
 	<button
 		type="button"
 		:class="[
-			'flex transition-all items-center space-x-2 p-3 hover:brightness-95 rounded-lg w-full bg-inherit disabled:opacity-50 disabled:pointer-events-none',
+			'flex transition-all items-center space-x-2 p-3 hover:brightness-95 rounded-lg w-full bg-inherit disabled:opacity-50 disabled:pointer-events-none ',
 			{ 'justify-center': props.center },
 		]"
 	>

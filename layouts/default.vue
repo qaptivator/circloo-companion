@@ -42,7 +42,7 @@
 						</svg>
 						<NuxtLink
 							to="/browse"
-							class="text-nowrap"
+							class="text-nowrap text-white"
 							>Browse</NuxtLink
 						>
 					</TransparentButton>
@@ -74,7 +74,7 @@
 						</svg>
 						<NuxtLink
 							to="/favorite"
-							class="text-nowrap"
+							class="text-nowrap text-white"
 							>Favorited (WIP)</NuxtLink
 						>
 					</TransparentButton>
@@ -98,7 +98,7 @@
 
 						<NuxtLink
 							to="/scripts"
-							class="text-nowrap"
+							class="text-nowrap text-white"
 							>Scripts (WIP)</NuxtLink
 						>
 					</TransparentButton>
