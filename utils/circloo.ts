@@ -26,6 +26,11 @@ export enum ModerationStatus {
 	Modded = 1,
 }
 
+export function roundDecimalPlace(value: number, place: number = 1) {
+	const multiplier = 10 ** place
+	return Math.round(value * multiplier) / multiplier
+}
+
 // these two fields are required for almost every request, or the request fails
 function _getBasicPayload() {
 	return {

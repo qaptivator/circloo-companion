@@ -8,11 +8,113 @@
 			class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-200 w-full h-full p-8 text-xl"
 		>
 			<h1 class="font-bold text-3xl">{{ level?.name }}</h1>
-			<h2 class="opacity-50">{{ level?.creator }}</h2>
-			<p class="mt-8">{{ level?.description }}</p>
-			<p class="mt-8 text-md">
-				Walkthrough link: <a>{{ level?.walkthroughLink }}</a>
+			<h2 class="opacity-50">by {{ level?.creator }}</h2>
+			<p
+				v-if="level?.description"
+				class="mt-8"
+			>
+				{{ level?.description }}
 			</p>
+			<p
+				v-if="level?.walkthroughLink"
+				class="mt-8 text-md"
+			>
+				Walkthrough link:
+				<a
+					:href="level?.walkthroughLink"
+					target="_blank"
+					title="Walkthrough link"
+					rel="noopener noreferrer"
+					>{{ level?.walkthroughLink }}</a
+				>
+			</p>
+			<!-- TODO: add the leaderboard -->
+			<!-- TODO: add the "more levels by <creator>" button. for that i need to handle params in browse.vue -->
+			<div class="mt-8 grid grid-rows-2 grid-cols-3 gap-8 w-fit">
+				<section>
+					<span class="flex font-bold items-center">
+						<!-- we dont need it here, i think -->
+						<i class="pi pi-play"></i>
+						Finishers
+					</span>
+					<div class="text-3xl">{{ level?.plays }}</div>
+				</section>
+				<section>
+					<span class="flex font-bold items-center">
+						<i class="pi pi-circle mr-1"></i>
+						Completions
+					</span>
+					<div class="text-3xl">{{ level?.totalCompletions }}</div>
+				</section>
+				<section>
+					<span class="flex font-bold items-center">
+						<i class="pi pi-clock mr-1"></i>
+						Average Time
+					</span>
+					<div class="text-3xl">
+						{{ averageDuration }}
+					</div>
+				</section>
+				<section>
+					<span class="flex font-bold items-center">
+						<!-- we dont need it here, i think -->
+						<i class="pi pi-user mr-1"></i>
+						Players
+					</span>
+					<div class="text-3xl">{{ level?.starts }}</div>
+				</section>
+				<section>
+					<span class="flex font-bold items-center">
+						<i class="pi pi-star mr-1"></i>
+						Stars
+					</span>
+					<div class="text-3xl">{{ level?.stars }}</div>
+				</section>
+				<section>
+					<span class="flex font-bold items-center">
+						<i class="pi pi-percentage mr-1"></i>
+						Clear Rate (CR)
+					</span>
+					<div class="text-3xl">{{ clearRate }}%</div>
+				</section>
+			</div>
+			<footer class="mt-4 text-sm opacity-50">
+				Completions is amount of times your level was completed.<br />
+				Finishers is unique completions (how many people completed the
+				level).<br />
+				Players is amount of started runs, but not necessarily completing the
+				level.<br />
+				Clear rate is finishers divided by players. This show the approximate
+				difficulty of the level.<br />The lower the percentage, the harder the
+				level.
+			</footer>
+			<div class="mt-8 flex items-center">
+				<span
+					>Uploaded on
+					{{
+						level?.creationTime ? formatDate(level?.creationTime) : 'unknown'
+					}}</span
+				>
+				<Button
+					@click="copyCreationTime"
+					class="!ml-4"
+					icon="pi pi-copy"
+					size="small"
+					variant="outlined"
+					severity="contrast"
+				></Button>
+			</div>
+			<div class="mt-4 flex items-center opacity-50">
+				<span>Level ID: {{ level?.id ? level?.id : 'unknown' }}</span>
+				<Button
+					@click="copyId"
+					class="!ml-4"
+					icon="pi pi-copy"
+					size="small"
+					variant="outlined"
+					severity="contrast"
+				></Button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -38,5 +140,61 @@ onMounted(async () => {
 		notFound.value = true
 	}
 })
+
+function formatDuration(seconds: number): string {
+	const minutes = Math.floor(seconds / 60)
+	const remainingSeconds = Math.floor(seconds % 60)
+	const milliseconds = Math.floor((seconds % 1) * 100)
+	return `${minutes}:${remainingSeconds
+		.toString()
+		.padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`
+}
+
+const averageDuration = computed(() => {
+	const seconds = roundDecimalPlace(
+		(level.value ? calculateAverageDuration(level.value) : -1) / 60,
+		2
+	)
+	return formatDuration(seconds)
+})
+
+const clearRate = computed(() => {
+	if (level.value) {
+		return roundDecimalPlace((level.value.plays / level.value.starts) * 100)
+	} else {
+		return -1
+	}
+})
+
+function formatDate(date: Date): string {
+	const readableDate = new Intl.DateTimeFormat('en-US', {
+		month: 'long',
+		day: 'numeric',
+		year: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+		second: 'numeric',
+		hour12: true,
+	}).format(date)
+	const ingameDate = new Intl.DateTimeFormat('en-US', {
+		month: 'numeric',
+		day: 'numeric',
+		year: 'numeric',
+	}).format(date)
+	return `${readableDate} (${ingameDate})`
+}
+
+function copyToClipboard(text: string) {
+	navigator.clipboard.writeText(text)
+}
+
+function copyCreationTime() {
+	if (level.value?.creationTime)
+		copyToClipboard(level.value?.creationTime.getTime().toString())
+}
+
+function copyId() {
+	if (level.value?.id) copyToClipboard(level.value?.id)
+}
 </script>
 <style scoped lang="css"></style>

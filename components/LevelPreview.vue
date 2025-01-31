@@ -46,10 +46,6 @@ function clicked() {
 	if (props.level?.id) navigateTo(`level/${props.level?.id}`)
 }
 
-function roundDecimalPlace(v: number) {
-	return Math.round(v * 10) / 10
-}
-
 const clearRate = computed(() => {
 	if (props.level) {
 		return roundDecimalPlace((props.level.plays / props.level.starts) * 100)

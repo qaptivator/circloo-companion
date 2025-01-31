@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="open-sans">
 		<!--<NuxtWelcome />-->
 		<NuxtLayout>
 			<NuxtPage />
