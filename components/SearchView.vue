@@ -1,15 +1,68 @@
 <template>
 	<div class="flex flex-col space-y-4 items-center">
 		<!-- search query -->
-		<InputGroup class="!w-[500px]">
-			<InputText
-				v-model="searchQuery"
-				placeholder="Level name, creator, ID..."
-			/>
-			<InputGroupAddon>
-				<i class="pi pi-search"> </i>
-			</InputGroupAddon>
-		</InputGroup>
+		<div class="flex space-x-4 justify-center">
+			<InputGroup class="!w-[500px]">
+				<InputText
+					v-model="searchQuery"
+					placeholder="Level name, creator, ID..."
+				/>
+				<InputGroupAddon>
+					<Select
+						id="-select"
+						:options="[
+							{ label: 'Name', value: 'level-name', icon: 'pi pi-globe' },
+							{ label: 'Creator', value: 'level-creator', icon: 'pi pi-user' },
+							{ label: 'ID', value: 'level-id', icon: 'pi pi-hashtag' },
+						]"
+						optionLabel="label"
+						placeholder="Search"
+						class="!min-w-20"
+						><template #value="slotProps">
+							<div
+								v-if="slotProps.value"
+								class="flex items-center"
+							>
+								<i :class="[slotProps.value.icon, 'mr-1']"></i>
+								<div>{{ slotProps.value.label }}</div>
+							</div>
+							<span v-else>
+								{{ slotProps.placeholder }}
+							</span>
+						</template></Select
+					>
+				</InputGroupAddon>
+				<!--<InputGroupAddon>
+					<Button
+						@click="showAdvanced = !showAdvanced"
+						icon="pi pi-cog"
+						variant="outlined"
+						severity="contrast"
+					></Button>
+				</InputGroupAddon>-->
+				<!--<InputGroupAddon>
+					<i class="pi pi-search"> </i>
+				</InputGroupAddon>-->
+			</InputGroup>
+			<!--<InputGroup>
+				<InputGroupAddon>
+					<Button
+						@click="showAdvanced = !showAdvanced"
+						icon="pi pi-cog"
+						variant="outlined"
+						severity="contrast"
+					></Button>
+				</InputGroupAddon>
+				<InputGroupAddon>
+					<Button
+						@click="showAdvanced = !showAdvanced"
+						icon="pi pi-cog"
+						variant="outlined"
+						severity="contrast"
+					></Button>
+				</InputGroupAddon>
+			</InputGroup>-->
+		</div>
 
 		<!-- filters and stuff -->
 		<div class="flex space-x-4 justify-center">
