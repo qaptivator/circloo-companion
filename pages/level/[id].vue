@@ -1,119 +1,142 @@
 <template>
-	<div class="flex space-x-8 w-full h-full">
-		<LevelThumbnail
-			:level="level"
-			class="!w-96 !h-96"
-		/>
+	<div>
 		<div
-			class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-200 w-full h-full p-8 text-xl"
+			v-if="loading && !notFound"
+			class="flex space-x-8 w-full h-full"
 		>
-			<h1 class="font-bold text-3xl">{{ level?.name }}</h1>
-			<h2 class="opacity-50">by {{ level?.creator }}</h2>
-			<p
-				v-if="level?.description"
-				class="mt-8"
+			<Skeleton
+				shape="circle"
+				size="24rem"
+			/>
+			<Skeleton
+				width="70rem"
+				height="55rem"
+				borderRadius="16px"
+			/>
+		</div>
+		<div
+			v-if="!loading && notFound"
+			class="flex space-x-8 w-full h-full"
+		></div>
+		<div
+			v-if="!loading && !notFound"
+			class="flex space-x-8 w-full h-full"
+		>
+			<LevelThumbnail
+				:level="level"
+				class="!w-96 !h-96"
+			/>
+			<div
+				class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-200 w-full h-full p-8 text-xl"
 			>
-				{{ level?.description }}
-			</p>
-			<p
-				v-if="level?.walkthroughLink"
-				class="mt-8 text-md"
-			>
-				Walkthrough link:
-				<a
-					:href="level?.walkthroughLink"
-					target="_blank"
-					title="Walkthrough link"
-					rel="noopener noreferrer"
-					>{{ level?.walkthroughLink }}</a
+				<h1 class="font-bold text-3xl">{{ level?.name }}</h1>
+				<h2 class="opacity-50">by {{ level?.creator }}</h2>
+				<p
+					v-if="level?.description"
+					class="mt-8"
 				>
-			</p>
-			<!-- TODO: add the leaderboard -->
-			<!-- TODO: add the "more levels by <creator>" button. for that i need to handle params in browse.vue -->
-			<div class="mt-8 grid grid-rows-2 grid-cols-3 gap-8 w-fit">
-				<section>
-					<span class="flex font-bold items-center">
-						<!-- we dont need it here, i think -->
-						<i class="pi pi-play"></i>
-						Finishers
-					</span>
-					<div class="text-3xl">{{ level?.plays }}</div>
-				</section>
-				<section>
-					<span class="flex font-bold items-center">
-						<i class="pi pi-circle mr-1"></i>
-						Completions
-					</span>
-					<div class="text-3xl">{{ level?.totalCompletions }}</div>
-				</section>
-				<section>
-					<span class="flex font-bold items-center">
-						<i class="pi pi-clock mr-1"></i>
-						Average Time
-					</span>
-					<div class="text-3xl">
-						{{ averageDuration }}
-					</div>
-				</section>
-				<section>
-					<span class="flex font-bold items-center">
-						<!-- we dont need it here, i think -->
-						<i class="pi pi-user mr-1"></i>
-						Players
-					</span>
-					<div class="text-3xl">{{ level?.starts }}</div>
-				</section>
-				<section>
-					<span class="flex font-bold items-center">
-						<i class="pi pi-star mr-1"></i>
-						Stars
-					</span>
-					<div class="text-3xl">{{ level?.stars }}</div>
-				</section>
-				<section>
-					<span class="flex font-bold items-center">
-						<i class="pi pi-percentage mr-1"></i>
-						Clear Rate (CR)
-					</span>
-					<div class="text-3xl">{{ clearRate }}%</div>
-				</section>
-			</div>
-			<footer class="mt-4 text-sm opacity-50">
-				Completions is amount of times your level was completed.<br />
-				Finishers is unique completions (how many people completed the
-				level).<br />
-				Players is amount of started runs, but not necessarily completing the
-				level.<br />
-				Clear rate is finishers divided by players. This show the approximate
-				difficulty of the level.<br />The lower the percentage, the harder the
-				level.
-			</footer>
-			<div class="mt-8 flex items-center">
-				<span
-					>Uploaded on
-					{{
-						level?.creationTime ? formatDate(level?.creationTime) : 'unknown'
-					}}</span
+					{{ level?.description }}
+				</p>
+				<p
+					v-if="level?.walkthroughLink"
+					class="mt-8 text-md"
 				>
-				<Button
-					@click="copyCreationTime"
-					class="!ml-4"
-					icon="pi pi-copy"
-					size="small"
-					variant="outlined"
-					severity="contrast"
-				></Button>
-			</div>
-			<div class="mt-4 flex items-center opacity-50">
-				<span>Level ID: {{ level?.id ? level?.id : 'unknown' }}</span>
-				<Button
-					@click="copyId"
-					class="!ml-4"
-					icon="pi pi-copy"
-					size="small"
-					variant="outlined"
-					severity="contrast"
-				></Button>
+					Walkthrough link:
+					<a
+						:href="level?.walkthroughLink"
+						target="_blank"
+						title="Walkthrough link"
+						rel="noopener noreferrer"
+						>{{ level?.walkthroughLink }}</a
+					>
+				</p>
+				<!-- TODO: add the leaderboard -->
+				<!-- TODO: add the "more levels by <creator>" button. for that i need to handle params in browse.vue -->
+				<div class="mt-8 grid grid-rows-2 grid-cols-3 gap-8 w-fit">
+					<section>
+						<span class="flex font-bold items-center">
+							<!-- we dont need it here, i think -->
+							<i class="pi pi-play"></i>
+							Finishers
+						</span>
+						<div class="text-3xl">{{ level?.plays }}</div>
+					</section>
+					<section>
+						<span class="flex font-bold items-center">
+							<i class="pi pi-circle mr-1"></i>
+							Completions
+						</span>
+						<div class="text-3xl">{{ level?.totalCompletions }}</div>
+					</section>
+					<section>
+						<span class="flex font-bold items-center">
+							<i class="pi pi-clock mr-1"></i>
+							Average Time
+						</span>
+						<div class="text-3xl">
+							{{ averageDuration }}
+						</div>
+					</section>
+					<section>
+						<span class="flex font-bold items-center">
+							<!-- we dont need it here, i think -->
+							<i class="pi pi-user mr-1"></i>
+							Players
+						</span>
+						<div class="text-3xl">{{ level?.starts }}</div>
+					</section>
+					<section>
+						<span class="flex font-bold items-center">
+							<i class="pi pi-star mr-1"></i>
+							Stars
+						</span>
+						<div class="text-3xl">{{ level?.stars }}</div>
+					</section>
+					<section>
+						<span class="flex font-bold items-center">
+							<i class="pi pi-percentage mr-1"></i>
+							Clear Rate (CR)
+						</span>
+						<div class="text-3xl">{{ clearRate }}%</div>
+					</section>
+				</div>
+				<footer class="mt-4 text-sm opacity-50">
+					Completions is amount of times your level was completed.<br />
+					Finishers is unique completions (how many people completed the
+					level).<br />
+					Players is amount of started runs, but not necessarily completing the
+					level.<br />
+					Clear rate is finishers divided by players. This show the approximate
+					difficulty of the level.<br />The lower the percentage, the harder the
+					level.
+				</footer>
+				<div class="mt-8 flex items-center">
+					<span
+						>Uploaded on
+						{{
+							level?.creationTime ? formatDate(level?.creationTime) : 'unknown'
+						}}</span
+					>
+					<Button
+						@click="copyCreationTime"
+						class="!ml-4"
+						icon="pi pi-copy"
+						size="small"
+						variant="outlined"
+						severity="contrast"
+					></Button>
+				</div>
+				<div class="mt-4 flex items-center opacity-50">
+					<span>Level ID: {{ level?.id ? level?.id : 'unknown' }}</span>
+					<Button
+						@click="copyId"
+						class="!ml-4"
+						icon="pi pi-copy"
+						size="small"
+						variant="outlined"
+						severity="contrast"
+					></Button>
+				</div>
 			</div>
 		</div>
 	</div>
