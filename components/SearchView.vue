@@ -340,7 +340,9 @@ async function fetchLevels() {
 	// searchQuery
 	if (searchQuery.value) {
 		if (searchMode.value?.value === 'creator') {
-			query += `Levels by ${searchQuery.value}`
+			// filters dont work here
+			// todo: add a notice that filters dont work with creator and id
+			query = `Levels by ${searchQuery.value}`
 		} else {
 			// rookie mistake 2: append just the ref instead of its value
 			query += searchQuery.value
@@ -348,9 +350,6 @@ async function fetchLevels() {
 	}
 
 	let levels: Level[] = []
-
-	console.log('query:', query)
-
 	if (
 		searchMode.value?.value === 'name' ||
 		searchMode.value?.value === 'creator'
