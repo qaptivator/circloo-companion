@@ -9,28 +9,17 @@
 				/>
 				<InputGroupAddon>
 					<Select
-						id="-select"
+						v-model="searchMode"
+						id="searchMode-select"
 						:options="[
-							{ label: 'Name', value: 'level-name', icon: 'pi pi-globe' },
-							{ label: 'Creator', value: 'level-creator', icon: 'pi pi-user' },
-							{ label: 'ID', value: 'level-id', icon: 'pi pi-hashtag' },
+							{ label: 'Name', value: 'name' },
+							{ label: 'Creator', value: 'creator' },
+							{ label: 'ID', value: 'id' },
 						]"
 						optionLabel="label"
 						placeholder="Search"
 						class="!min-w-20"
-						><template #value="slotProps">
-							<div
-								v-if="slotProps.value"
-								class="flex items-center"
-							>
-								<i :class="[slotProps.value.icon, 'mr-1']"></i>
-								<div>{{ slotProps.value.label }}</div>
-							</div>
-							<span v-else>
-								{{ slotProps.placeholder }}
-							</span>
-						</template></Select
-					>
+					/>
 				</InputGroupAddon>
 				<!--<InputGroupAddon>
 					<Button
@@ -226,6 +215,14 @@
 const searchQuery: Ref<string> = ref('')
 
 // what the hell is this :skull:
+const searchMode: Ref<
+	| {
+			label: string
+			value: string
+	  }
+	| undefined
+> = ref({ label: 'Name', value: 'name' })
+
 const sortMode: Ref<
 	| {
 			label: string
@@ -258,6 +255,7 @@ const showAllLevels: Ref<boolean> = ref(false)
 const fetchedLevels: Ref<Level[]> = ref([])
 const showAdvanced: Ref<boolean> = ref(false)
 
+watch(searchMode, fetchLevels)
 watch(searchQuery, fetchLevels) // todo: add timeout for this
 watch(sortMode, fetchLevels)
 watch(filterMode, fetchLevels)
@@ -323,7 +321,6 @@ async function fetchLevels() {
 	let filters = []
 	if (filterMode.value) {
 		for (const _mode of filterMode.value) {
-			console.log(_mode)
 			if (_mode && _mode.value) {
 				filters.push(_mode.value)
 			}
@@ -342,18 +339,33 @@ async function fetchLevels() {
 
 	// searchQuery
 	if (searchQuery.value) {
+		//if (searchMode.value?.value === 'creator')
 		// rookie mistake 2: append just the ref instead of its value
 		query += searchQuery.value
 	}
 
-	// TODO: add pagination (just a page selector, everything else is handled for you)
-	const levels = await getLevels(
-		SortMode.Search,
-		realPage.value,
-		itemsPerPage.value > 0 ? itemsPerPage.value ?? 10 : 10,
-		showAllLevels.value ? Spec.All : Spec.Modded,
-		query
-	)
+	let levels: Level[] = []
+
+	if (searchMode.value?.value === 'name') {
+		levels = await getLevels(
+			SortMode.Search,
+			realPage.value,
+			itemsPerPage.value > 0 ? itemsPerPage.value ?? 10 : 10,
+			showAllLevels.value ? Spec.All : Spec.Modded,
+			query
+		)
+	} else if (searchMode.value?.value === 'creator') {
+		console.log(`Levels by ${query}`)
+		levels = await getLevels(
+			SortMode.Search,
+			realPage.value,
+			itemsPerPage.value > 0 ? itemsPerPage.value ?? 10 : 10,
+			showAllLevels.value ? Spec.All : Spec.Modded,
+			`Levels by ${query}`
+		)
+	} else if (searchMode.value?.value === 'id') {
+		levels = await getLevelsById([query])
+	}
 
 	/* oops, this just prevents any levels from showing if results are not found
 	if (levels.length > 0) {
