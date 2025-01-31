@@ -126,21 +126,6 @@ function test() {
 		console.log(res.data)
 	})
 }
-</script>
-<script setup lang="ts">
-import axios from 'axios'
-function test() {
-	axios({
-		method: 'GET',
-		url: 'https://circloo-api-vercel.vercel.app/api/GetLevelsDaily',
-		params: {
-			version: 8,
-			deviceID: 0,
-		},
-	}).then((res) => {
-		console.log(res.data)
-	})
-}
 function test2() {
 	axios({
 		method: 'POST',
