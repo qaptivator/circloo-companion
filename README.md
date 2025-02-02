@@ -2,6 +2,10 @@
 
 external circloo level browser and toolkit
 
+# todo list
+
+read the comments in code prefixed with "TODO"
+
 # local build
 
 make sure that you have nodejs `18.x` or newer.  

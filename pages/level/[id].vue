@@ -26,6 +26,7 @@
 			></Button>
 		</div>
 		<!-- v-show just doesnt render the element, but it is still processed -->
+		<!-- TODO: add AdvancedLevelInfo stats somewhere in the ui (that includes the leaderboard) -->
 		<div
 			v-show="!loading && !notFound"
 			class="flex flex-col lg:flex-row gap-8 w-full h-full"
@@ -205,6 +206,10 @@
 						@click="downloadRawThumbnail"
 						label="Download thumbnail only with borders"
 					></Button>
+					<Button
+						@click="downloadLevel"
+						label="Download level content"
+					></Button>
 				</div>
 				<div class="mt-8 flex items-center">
 					<span
@@ -269,6 +274,8 @@ onMounted(async () => {
 		notFound.value = true
 	}
 })
+
+function downloadLevel() {}
 
 /*const thumbnailRef = ref()
 function downloadThumbnail() {

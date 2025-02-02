@@ -23,6 +23,10 @@
 				without installing anything (WORK IN PROGRESS)
 			</li>
 		</ul>
+		<span class="text-sm opacity-50"
+			>* Not all levels can be downloaded. By the level creator, a level can be
+			requested to be non-downloadable, putting it in a blacklist.
+		</span>
 		<Button
 			class="!mt-8 !w-64"
 			as="router-link"
@@ -65,6 +69,13 @@
 				</p>
 			</div>
 		</div>-->
+		<footer
+			class="w-full dark:bg-surface-900 bg-gray-100 text-gray-400 dark:text-surface-600 p-4 text-sm rounded-xl !mt-10"
+		>
+			This website is not affiliated with circloO nor Florian van Strien.
+			Licensed under GPL-3.0. Static website hosted on GitHub Pages. Backend
+			hosted on Vercel.
+		</footer>
 	</div>
 </template>
 <script setup lang="ts">

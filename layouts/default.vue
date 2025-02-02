@@ -9,6 +9,7 @@
 		<div class="flex h-full">
 			<!--w-64-->
 			<!-- TODO: make this a top bar instead of sidebar -->
+			<!-- TODO: add a frequently asked questions page -->
 			<aside
 				class="w-16 lg:w-64 h-full text-white p-4 flex flex-col space-y-4 bg-primary-400"
 			>
@@ -90,17 +91,8 @@
 					</li>
 				</ul>
 			</aside>
-			<main class="flex-1 overflow-y-auto h-full flex flex-col">
-				<div class="p-8 flex-1">
-					<slot />
-				</div>
-				<footer
-					class="w-full dark:bg-surface-900 bg-gray-100 text-gray-400 dark:text-surface-600 p-4"
-				>
-					This website is not affiliated with circloO nor Florian van Strien.
-					Licensed under GPL-3.0. Static website hosted on GitHub Pages. Backend
-					hosted on Vercel.
-				</footer>
+			<main class="flex-1 overflow-y-auto h-full p-8">
+				<slot />
 			</main>
 		</div>
 	</div>
