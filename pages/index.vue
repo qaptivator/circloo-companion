@@ -24,8 +24,8 @@
 			</li>
 		</ul>
 		<span class="text-sm opacity-50"
-			>* Not all levels can be downloaded. By the level creator, a level can be
-			requested to be non-downloadable, putting it in a blacklist.
+			>* Not all levels can be downloaded. The level creator can request their
+			level to be non-downloadable, putting it in a blacklist.
 		</span>
 		<Button
 			class="!mt-8 !w-64"
@@ -54,7 +54,7 @@
 					I am captivator. I have poured several weeks into making this
 					website,<br />
 					and I will be grateful if you leave a star on the GitHub repository!
-					Thanks for using this!
+					Thanks for using this! (this is clickable by the way)
 				</p>
 			</template>
 		</Card>

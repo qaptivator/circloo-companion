@@ -208,7 +208,8 @@
 					></Button>
 					<Button
 						@click="downloadLevel"
-						label="Download level content"
+						disabled
+						label="Download level content (WIP)"
 					></Button>
 				</div>
 				<div class="mt-8 flex items-center">

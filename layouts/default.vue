@@ -9,7 +9,6 @@
 		<div class="flex h-full">
 			<!--w-64-->
 			<!-- TODO: make this a top bar instead of sidebar -->
-			<!-- TODO: add a frequently asked questions page -->
 			<aside
 				class="w-16 lg:w-64 h-full text-white p-4 flex flex-col space-y-4 bg-primary-400"
 			>
@@ -66,6 +65,17 @@
 						to="/browse"
 						fluid
 					></Button>-->
+					</li>
+					<li class="bg-inherit">
+						<TransparentButton @click="navigateTo('/faq')">
+							<i class="pi pi-question-circle"></i>
+							<span v-if="isDesktop">FAQ</span>
+							<!--<NuxtLink
+							to="/favorite"
+							class="text-nowrap text-white"
+							>Favorited (WIP)</NuxtLink
+						>-->
+						</TransparentButton>
 					</li>
 					<li class="bg-inherit">
 						<TransparentButton disabled>
