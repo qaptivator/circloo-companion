@@ -128,6 +128,64 @@
 						the harder the level.
 					</footer>
 				</Fieldset>
+				<div class="mt-8 flex flex-col">
+					<!-- TODO: abstract these into a component -->
+					<!-- TODO: make this work somehow without tabindex="0" -->
+					<InputGroup class="!w-80">
+						<InputGroupAddon class="!rounded-b-none !w-36"
+							>Background</InputGroupAddon
+						>
+						<InputText
+							tabindex="0"
+							@focus="selectAllOnFocus"
+							:modelValue="vector3ToRgb(colorPalette.background)"
+							placeholder="RGB Color"
+							readonly
+						/>
+						<InputGroupAddon
+							class="!w-10 !rounded-b-none"
+							:style="{
+								'background-color': vector3ToStyle(colorPalette.background),
+							}"
+						></InputGroupAddon>
+					</InputGroup>
+					<InputGroup class="!w-80">
+						<InputGroupAddon class="!rounded-none !w-36"
+							>Objects</InputGroupAddon
+						>
+						<InputText
+							tabindex="0"
+							@focus="selectAllOnFocus"
+							:modelValue="vector3ToRgb(colorPalette.main)"
+							placeholder="RGB Color"
+							readonly
+						/>
+						<InputGroupAddon
+							class="!w-10 !rounded-none"
+							:style="{
+								'background-color': vector3ToStyle(colorPalette.main),
+							}"
+						></InputGroupAddon>
+					</InputGroup>
+					<InputGroup class="!w-80">
+						<InputGroupAddon class="!rounded-t-none !w-36"
+							>Player</InputGroupAddon
+						>
+						<InputText
+							tabindex="0"
+							@focus="selectAllOnFocus"
+							:modelValue="vector3ToRgb(colorPalette.player)"
+							placeholder="RGB Color"
+							readonly
+						/>
+						<InputGroupAddon
+							class="!w-10 !rounded-t-none"
+							:style="{
+								'background-color': vector3ToStyle(colorPalette.player),
+							}"
+						></InputGroupAddon>
+					</InputGroup>
+				</div>
 				<div class="mt-8 flex items-center">
 					<span
 						>Uploaded on
@@ -180,6 +238,36 @@ onMounted(async () => {
 		level.value = levels[0]
 	} else {
 		notFound.value = true
+	}
+})
+
+function selectAllOnFocus(e: Event) {
+	const target = e.target as HTMLInputElement
+	target.select()
+}
+
+function vector3ToRgb(v: Vector3): string {
+	return `${v.x}, ${v.y}, ${v.z}`
+}
+
+function vector3ToStyle(v: Vector3): string {
+	return `rgb(${v.x},${v.y},${v.z})`
+}
+
+const colorPalette: ComputedRef<LevelColorPalette> = computed(() => {
+	const _ZERO = {
+		x: 0,
+		y: 0,
+		z: 0,
+	}
+	if (level.value) {
+		return getColorPalette(level.value)
+	} else {
+		return {
+			background: _ZERO,
+			main: _ZERO,
+			player: _ZERO,
+		}
 	}
 })
 

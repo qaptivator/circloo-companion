@@ -290,13 +290,13 @@ export function blendColors(
 	}
 }
 
-type LevelColorPallete = {
+export type LevelColorPalette = {
 	background: Vector3
 	main: Vector3
 	player: Vector3
 }
 
-function _getColorPalleteRaw(hue: number): LevelColorPallete {
+function _getColorPaletteRaw(hue: number): LevelColorPalette {
 	const c_black = { x: 0, y: 0, z: 0 }
 	const c_gray = { x: 128, y: 128, z: 128 }
 
@@ -316,8 +316,8 @@ function _getColorPalleteRaw(hue: number): LevelColorPallete {
 	}
 }
 
-export function getColorPallete(level: Level): LevelColorPallete {
-	return _getColorPalleteRaw(level.color)
+export function getColorPalette(level: Level): LevelColorPalette {
+	return _getColorPaletteRaw(level.color)
 }
 
 // this is what comes from the api

@@ -35,20 +35,20 @@ function invertColor(color: Vector3): Vector3 {
 
 const backgroundColor = computed(() => {
 	if (props.level) {
-		const bg = getColorPallete(props.level).background
+		const bg = getColorPalette(props.level).background
 		//const bg = invertColor(props.level.color)
 		//const bg = props.level.color
 		return `rgb(${bg.x},${bg.y},${bg.z})`
 	} else {
 		// default level color here
-		return 'rgb(255,255,0)'
+		return 'rgb(0,0,0)'
 	}
 })
 
 // TODO: add a way to detect completed levels (possibly requires a local application)
 const borderColor = computed(() => {
 	if (props.level) {
-		const bg = getColorPallete(props.level).main
+		const bg = getColorPalette(props.level).main
 		//const bg = invertColor(props.level.color)
 		//const bg = props.level.color
 		return `rgb(${bg.x},${bg.y},${bg.z})`
