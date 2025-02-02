@@ -1,6 +1,7 @@
 <template>
 	<div class="open-sans">
 		<!--<NuxtWelcome />-->
+		<Toast />
 		<NuxtLayout>
 			<NuxtPage />
 		</NuxtLayout>

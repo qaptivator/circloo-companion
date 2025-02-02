@@ -26,6 +26,7 @@
     "dependencies": {
         "@primevue/themes": "^4.2.5",
         "axios": "^1.6.5",
+        "html2canvas": "^1.4.1",
         "primeicons": "^7.0.0",
         "primevue": "^4.2.5",
         "tailwindcss-primeui": "^0.4.0"

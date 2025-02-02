@@ -27,6 +27,17 @@ export enum ModerationStatus {
 	Unknown = 'unknown',
 }
 
+export function downloadFile(file: string | Blob, filename: string) {
+	const url: string = file instanceof Blob ? URL.createObjectURL(file) : file
+	const a = document.createElement('a')
+	a.href = url
+	a.download = filename
+	document.body.appendChild(a)
+	a.click()
+	document.body.removeChild(a)
+	URL.revokeObjectURL(url)
+}
+
 export function roundDecimalPlace(value: number, place: number = 1) {
 	const multiplier = 10 ** place
 	return Math.round(value * multiplier) / multiplier

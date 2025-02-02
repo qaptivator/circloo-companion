@@ -25,14 +25,18 @@
 				to="/browse"
 			></Button>
 		</div>
+		<!-- v-show just doesnt render the element, but it is still processed -->
 		<div
-			v-if="!loading && !notFound"
+			v-show="!loading && !notFound"
 			class="flex flex-col lg:flex-row gap-8 w-full h-full"
 		>
-			<LevelThumbnail
-				:level="level"
-				class="!w-96 !h-96"
-			/>
+			<client-only>
+				<LevelThumbnail
+					ref="thumbnailRef"
+					:level="level"
+					class="!w-96 !h-96"
+			/></client-only>
+
 			<div
 				class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-100 w-full h-full p-8 text-sm lg:text-xl"
 			>
@@ -131,6 +135,7 @@
 				<div class="mt-8 flex flex-col">
 					<!-- TODO: abstract these into a component -->
 					<!-- TODO: make this work somehow without tabindex="0" -->
+					<!-- TODO: make this text aligned to the left -->
 					<InputGroup class="!w-80">
 						<InputGroupAddon class="!rounded-b-none !w-36"
 							>Background</InputGroupAddon
@@ -186,6 +191,21 @@
 						></InputGroupAddon>
 					</InputGroup>
 				</div>
+				<!-- wait, i think its actually better to use gap instead of space in flexboxes and grids -->
+				<div class="mt-8 flex space-x-4">
+					<Button
+						:label="`More levels by ${level?.creator} (WIP)`"
+						disabled
+					></Button>
+					<Button
+						@click="downloadThumbnail"
+						label="Download thumbnail as PNG"
+					></Button>
+					<Button
+						@click="downloadRawThumbnail"
+						label="Download thumbnail only with borders"
+					></Button>
+				</div>
 				<div class="mt-8 flex items-center">
 					<span
 						>Uploaded on
@@ -218,7 +238,11 @@
 	</div>
 </template>
 <script setup lang="ts">
+import html2canvas from 'html2canvas'
+import { useToast } from 'primevue/usetoast'
+
 const route = useRoute()
+const toast = useToast()
 
 const loading = ref(true)
 const notFound = ref(false)
@@ -240,6 +264,60 @@ onMounted(async () => {
 		notFound.value = true
 	}
 })
+
+const thumbnailRef = ref()
+function downloadThumbnail() {
+	if (level.value && thumbnailRef.value) {
+		html2canvas(thumbnailRef.value)
+			.then((canvas) => {
+				const image = canvas.toDataURL('image/png')
+				if (level.value) {
+					downloadFile(image, `${level.value.name}-thumbnail.png`)
+				} else {
+					toast.add({
+						severity: 'error',
+						summary: 'Failed to download thumbnail',
+						detail:
+							'Contact the developer so that they will fix the issue. Error: level.value is undefined',
+						life: 3000,
+					})
+				}
+			})
+			.catch((error) => {
+				toast.add({
+					severity: 'error',
+					summary: 'Failed to download thumbnail',
+					detail: `Contact the developer so that they will fix the issue. Error: ${error}`,
+					life: 3000,
+				})
+			})
+	} else {
+		toast.add({
+			severity: 'error',
+			summary: 'Failed to download thumbnail',
+			detail:
+				'Contact the developer so that they will fix the issue. Error: level.value or thumbnailRef.value is undefined',
+			life: 3000,
+		})
+	}
+}
+
+function downloadRawThumbnail() {
+	if (level.value) {
+		downloadFile(
+			level.value.imageURI,
+			`${level.value.name}-thumbnail-borders.png`
+		)
+	} else {
+		toast.add({
+			severity: 'error',
+			summary: 'Failed to download thumbnail only with borders',
+			detail:
+				'Contact the developer so that they will fix the issue. Error: level.value is undefined',
+			life: 3000,
+		})
+	}
+}
 
 function selectAllOnFocus(e: Event) {
 	const target = e.target as HTMLInputElement
