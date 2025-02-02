@@ -7,6 +7,10 @@
 			:level="props.level"
 			class="!w-32 !h-32"
 		/>
+		<i
+			v-if="props.level?.moderationStatus === ModerationStatus.Unmodded"
+			class="pi pi-lock absolute top-0 left-0 opacity-20 text-black dark:text-white"
+		></i>
 		<div
 			class="w-full h-full absolute top-0 left-0 flex flex-col justify-center items-center text-black text-sm"
 		>
@@ -44,6 +48,16 @@ const props = defineProps<{
 // TODO: make a computed "level" for "props.level"
 
 function clicked() {
+	/*console.log(
+		'name:',
+		props.level?.name,
+		'moderationStatus:',
+		props.level?.moderationStatus,
+		'isModerated:',
+		props.level?.moderationStatus !== undefined &&
+			props.level.moderationStatus === ModerationStatus.Unmodded
+		// why do i have to use such shenanigans in typescript to just compare two values of an enum? thats weird...
+	)*/
 	if (props.level?.id) navigateTo(`level/${props.level?.id}`)
 }
 

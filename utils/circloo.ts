@@ -22,8 +22,9 @@ export enum Spec {
 }
 
 export enum ModerationStatus {
-	Unmodded = 0,
-	Modded = 1,
+	Unmodded = 'unmodded', // 0
+	Modded = 'modded', // 1
+	Unknown = 'unknown',
 }
 
 export function roundDecimalPlace(value: number, place: number = 1) {
@@ -389,9 +390,13 @@ async function _sanitizeLevel(rawLevel: _RawLevel): Promise<Level> {
 		}
 		newColor = parseInt(colorChars.join(''), 10)
 	}
-	//console.log('newColor', newColor)
 
-	// use COLORS from levelcode
+	let newModerationStatus = ModerationStatus.Unknown
+	if (parseInt(rawLevel.moderationStatus) === 0) {
+		newModerationStatus = ModerationStatus.Unmodded
+	} else if (parseInt(rawLevel.moderationStatus) === 1) {
+		newModerationStatus = ModerationStatus.Modded
+	}
 
 	return {
 		id: rawLevel.id,
@@ -411,10 +416,10 @@ async function _sanitizeLevel(rawLevel: _RawLevel): Promise<Level> {
 		starts: rawLevel.starts,
 		totalCompletions: rawLevel.totalCompletions,
 		stars: rawLevel.upvotes, // it is UPVOTES i am so dumb
-		moderationStatus:
-			ModerationStatus[
+		moderationStatus: newModerationStatus,
+		/*ModerationStatus[
 				rawLevel.moderationStatus as keyof typeof ModerationStatus
-			],
+			],*/
 		version: rawLevel.version,
 		bestScoreLog: rawLevel.bestScoreLog,
 		deviceID: rawLevel.deviceID,

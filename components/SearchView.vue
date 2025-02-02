@@ -126,10 +126,9 @@
 		>
 			<!-- todo: add more options such as "show all levels" or "version number" -->
 			<div class="flex items-center gap-2">
-				<Checkbox
+				<ToggleSwitch
 					v-model="showAllLevels"
 					id="showAllLevels-select"
-					binary
 				/>
 				<label for="showAllLevels-select"
 					>Show all levels (even unmodded ones)</label
