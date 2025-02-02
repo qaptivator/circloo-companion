@@ -191,8 +191,8 @@
 						></InputGroupAddon>
 					</InputGroup>
 				</div>
-				<!-- wait, i think its actually better to use gap instead of space in flexboxes and grids -->
-				<div class="mt-8 flex space-x-4">
+				<!-- wait, i think its actually better to use gap instead of space in flexboxes and grids. edit: i eventually just ended up using gap lol -->
+				<div class="mt-8 flex flex-wrap gap-4">
 					<Button
 						:label="`More levels by ${level?.creator} (WIP)`"
 						disabled
@@ -345,7 +345,7 @@ async function drawThumbnail(color: Vector3, thumbnailBorders: Blob) {
 			}
 
 			// im reusing methods omggg theyre finally useful
-			ctx.fillStyle = vector3ToRgb(color)
+			ctx.fillStyle = vector3ToHex(color)
 			ctx.beginPath()
 			ctx.arc(size.width / 2, size.width / 2, size.width / 2, 0, Math.PI * 2)
 			ctx.fill()
@@ -363,7 +363,7 @@ async function drawThumbnail(color: Vector3, thumbnailBorders: Blob) {
 async function downloadThumbnail() {
 	if (level.value) {
 		const drawnThumbnail = await drawThumbnail(
-			getColorPalette(level.value).main,
+			getColorPalette(level.value).background,
 			level.value.imageURI
 		)
 		downloadFile(drawnThumbnail, `${level.value.name}-thumbnail.png`)
@@ -398,6 +398,13 @@ function downloadRawThumbnail() {
 function selectAllOnFocus(e: Event) {
 	const target = e.target as HTMLInputElement
 	target.select()
+}
+
+function vector3ToHex(v: Vector3): string {
+	const r = v.x.toString(16).padStart(2, '0')
+	const g = v.y.toString(16).padStart(2, '0')
+	const b = v.z.toString(16).padStart(2, '0')
+	return `#${r}${g}${b}`
 }
 
 function vector3ToRgb(v: Vector3): string {
