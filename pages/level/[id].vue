@@ -238,7 +238,8 @@
 	</div>
 </template>
 <script setup lang="ts">
-import html2canvas from 'html2canvas'
+//import html2canvas from 'html2canvas'
+import imageSize from '@coderosh/image-size'
 import { useToast } from 'primevue/usetoast'
 
 const route = useRoute()
@@ -265,7 +266,7 @@ onMounted(async () => {
 	}
 })
 
-const thumbnailRef = ref()
+/*const thumbnailRef = ref()
 function downloadThumbnail() {
 	if (level.value && thumbnailRef.value) {
 		html2canvas(thumbnailRef.value)
@@ -297,6 +298,81 @@ function downloadThumbnail() {
 			summary: 'Failed to download thumbnail',
 			detail:
 				'Contact the developer so that they will fix the issue. Error: level.value or thumbnailRef.value is undefined',
+			life: 3000,
+		})
+	}
+}*/
+
+async function drawThumbnail(color: Vector3, thumbnailBorders: Blob) {
+	return new Promise<string>((resolve, reject) => {
+		const img = new Image()
+
+		// gosh i hate js for these legacy event listeners
+		// just use promises for the love of god
+		img.onload = async function () {
+			const arrayBuffer = await thumbnailBorders.arrayBuffer()
+			const size = await imageSize(arrayBuffer)
+			if (size.width !== size.height) {
+				toast.add({
+					severity: 'error',
+					summary: 'Failed to download thumbnail',
+					detail:
+						'Contact the developer so that they will fix the issue. Error: thumbnail blob is not a square (width != height)',
+					life: 3000,
+				})
+				reject('thumbnail blob is not a square (width != height)')
+				return
+			}
+
+			const canvas = document.createElement('canvas')
+			canvas.width = size.width
+			canvas.height = size.height
+
+			// https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#non-null-assertion-operator-postfix-
+			const ctx = canvas.getContext('2d')
+			//ctx.clearRect(0, 0, canvas.width, canvas.height)
+			if (!ctx) {
+				toast.add({
+					severity: 'error',
+					summary: 'Failed to download thumbnail',
+					detail:
+						'Contact the developer so that they will fix the issue. Error: canvas ctx is not CanvasRenderingContext2D, it is null',
+					life: 3000,
+				})
+				// ts REALLY wants me to have that unreachable return...
+				reject('canvas ctx is not CanvasRenderingContext2D, it is null')
+				return
+			}
+
+			// im reusing methods omggg theyre finally useful
+			ctx.fillStyle = vector3ToRgb(color)
+			ctx.beginPath()
+			ctx.arc(size.width / 2, size.width / 2, size.width / 2, 0, Math.PI * 2)
+			ctx.fill()
+			ctx.drawImage(img, 0, 0)
+
+			const imageUrl = canvas.toDataURL('image/png')
+			canvas.remove()
+			resolve(imageUrl)
+		}
+
+		img.src = URL.createObjectURL(thumbnailBorders)
+	})
+}
+
+async function downloadThumbnail() {
+	if (level.value) {
+		const drawnThumbnail = await drawThumbnail(
+			getColorPalette(level.value).main,
+			level.value.imageURI
+		)
+		downloadFile(drawnThumbnail, `${level.value.name}-thumbnail.png`)
+	} else {
+		toast.add({
+			severity: 'error',
+			summary: 'Failed to download thumbnail',
+			detail:
+				'Contact the developer so that they will fix the issue. Error: level.value is undefined',
 			life: 3000,
 		})
 	}
