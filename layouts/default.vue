@@ -1,22 +1,35 @@
 <template>
-	<div class="flex min-h-screen">
-		<aside class="w-64 text-white p-4 flex flex-col space-y-4 bg-primary-400">
-			<!-- should i make the sidebar bg-primary-400? edit: yes i do, or else the buttons just disappear in light mode -->
-			<!-- class="... border-r" style="border-color: var(--p-form-field-border-color)" -->
-			<h1
-				class="flex items-center space-x-4 text-xl font-bold w-full cursor-pointer"
+	<div class="w-full h-screen flex flex-col">
+		<div
+			v-if="!isOnline"
+			class="font-bold text-white bg-red-700 p-2 w-full"
+		>
+			⚠️ You are offline. Some features may not work.
+		</div>
+		<div class="flex h-full">
+			<!--w-64-->
+			<!-- TODO: make this a top bar instead of sidebar -->
+			<aside
+				class="w-16 lg:w-64 h-full text-white p-4 flex flex-col space-y-4 bg-primary-400"
 			>
-				<!-- TODO: make this an svg instead of png -->
-				<img
-					src="@/assets/images/icon-white.png"
-					alt="Logo"
-					class="!h-12 !w-12"
-				/>
-				<span v-if="isMaximized"
-					>circloO<br />
-					companion</span
+				<!-- should i make the sidebar bg-primary-400? edit: yes i do, or else the buttons just disappear in light mode -->
+				<!-- class="... border-r" style="border-color: var(--p-form-field-border-color)" -->
+				<h1
+					class="flex items-center justify-center space-x-4 text-xl font-bold w-full cursor-pointer"
+					:class="{ '!p-0': isDesktop }"
 				>
-				<TransparentButton
+					<!-- TODO: make this an svg instead of png -->
+					<!-- TODO: fix this image being wrong height when in mobile view -->
+					<img
+						src="@/assets/images/icon-white.png"
+						alt="Logo"
+						class="w-6 h-6 lg:w-12 lg:h-12"
+					/>
+					<span v-if="isDesktop"
+						>circloO<br />
+						companion</span
+					>
+					<!--<TransparentButton
 					class="!m-0"
 					@click="isMaximized = !isMaximized"
 				>
@@ -28,28 +41,22 @@
 						v-else
 						class="pi pi-chevron-right"
 					></i>
-				</TransparentButton>
-			</h1>
-			<div
-				v-if="!isOnline"
-				class="font-bold text-red-700"
-			>
-				⚠️ You are offline. Some features may not work.
-			</div>
-			<ul class="text-2xl list-none !bg-inherit">
-				<li class="!bg-inherit">
-					<!-- i just had to use my component here, im sorry -->
-					<TransparentButton>
-						<i class="pi pi-globe"></i>
-						<span v-if="isMaximized">Browse</span>
-						<!--<NuxtLink
+				</TransparentButton>-->
+				</h1>
+				<ul class="text-2xl list-none !bg-inherit">
+					<li class="!bg-inherit">
+						<!-- i just had to use my component here, im sorry -->
+						<TransparentButton @click="navigateTo('/browse')">
+							<i class="pi pi-globe"></i>
+							<span v-if="isDesktop">Browse</span>
+							<!--<NuxtLink
 							to="/browse"
 							class="text-nowrap text-white"
 							>Browse</NuxtLink
 						>-->
-					</TransparentButton>
-					<!-- todo: make this somehow use primevue components -->
-					<!--<Button
+						</TransparentButton>
+						<!-- todo: make this somehow use primevue components -->
+						<!--<Button
 						label="Browse"
 						icon="pi pi-globe"
 						variant="text"
@@ -57,39 +64,40 @@
 						to="/browse"
 						fluid
 					></Button>-->
-				</li>
-				<li class="bg-inherit">
-					<TransparentButton disabled>
-						<i class="pi pi-star"></i>
-						<span v-if="isMaximized">Favorited (WIP)</span>
-						<!--<NuxtLink
+					</li>
+					<li class="bg-inherit">
+						<TransparentButton disabled>
+							<i class="pi pi-star"></i>
+							<span v-if="isDesktop">Favorited (WIP)</span>
+							<!--<NuxtLink
 							to="/favorite"
 							class="text-nowrap text-white"
 							>Favorited (WIP)</NuxtLink
 						>-->
-					</TransparentButton>
-				</li>
-				<li class="bg-inherit">
-					<TransparentButton disabled>
-						<i class="pi pi-code"></i>
-						<span v-if="isMaximized">Scripts (WIP)</span>
-						<!--<NuxtLink
+						</TransparentButton>
+					</li>
+					<li class="bg-inherit">
+						<TransparentButton disabled>
+							<i class="pi pi-code"></i>
+							<span v-if="isDesktop">Scripts (WIP)</span>
+							<!--<NuxtLink
 							to="/scripts"
 							class="text-nowrap text-white"
 							>Scripts (WIP)</NuxtLink
 						>-->
-					</TransparentButton>
-				</li>
-			</ul>
-		</aside>
-		<main class="flex-1 p-8">
-			<slot />
-		</main>
+						</TransparentButton>
+					</li>
+				</ul>
+			</aside>
+			<main class="flex-1 p-8 overflow-y-auto h-full">
+				<slot />
+			</main>
+		</div>
 	</div>
 </template>
 <script setup lang="ts">
 const { isOnline } = useNetworkStatus()
-const isMaximized = ref(true)
+//const isMaximized = ref(true)
 
 // i hate the fact that the media matching code is copied here and there...
 const isDesktop = ref(window.matchMedia('(min-width: 1024px)').matches)
@@ -99,11 +107,11 @@ const updateIsDesktop = () => {
 
 onMounted(() => {
 	//updateIsDesktop()
-	if (!isDesktop.value) {
+	/*if (!isDesktop.value) {
 		isMaximized.value = false // minimize by default
 	} else {
 		isMaximized.value = true
-	}
+	}*/
 	window.addEventListener('resize', updateIsDesktop)
 })
 
