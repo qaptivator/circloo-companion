@@ -27,14 +27,14 @@
 		</div>
 		<div
 			v-if="!loading && !notFound"
-			class="flex space-x-8 w-full h-full"
+			class="flex flex-col lg:flex-row gap-8 w-full h-full"
 		>
 			<LevelThumbnail
 				:level="level"
 				class="!w-96 !h-96"
 			/>
 			<div
-				class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-100 w-full h-full p-8 text-xl"
+				class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-100 w-full h-full p-8 text-sm lg:text-xl"
 			>
 				<h1 class="font-bold text-3xl">{{ level?.name }}</h1>
 				<h2 class="opacity-50">by {{ level?.creator }}</h2>
@@ -61,7 +61,9 @@
 				<!-- TODO: add the download button with an api check for blacklisted levels (requested by creator) -->
 				<!-- TODO: add the leaderboard -->
 				<!-- TODO: add the "more levels by <creator>" button. for that i need to handle params in browse.vue -->
-				<div class="mt-8 grid grid-rows-2 grid-cols-3 gap-8 w-fit">
+				<div
+					class="mt-8 grid grid-rows-3 lg:grid-rows-2 grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-8 w-fit"
+				>
 					<section>
 						<span class="flex font-bold items-center">
 							<!-- we dont need it here, i think -->
@@ -110,13 +112,13 @@
 					</section>
 				</div>
 				<footer class="mt-4 text-sm opacity-50">
-					Completions is amount of times your level was completed.<br />
-					Finishers is unique completions (how many people completed the
-					level).<br />
-					Players is amount of started runs, but not necessarily completing the
-					level.<br />
+					Completions is amount of times your level was completed (also counts
+					completions by the same person).<br />
+					Finishers is amount of people completed the level.<br />
+					Players is amount of people who started the level, but not necessarily
+					completed the level.<br />
 					Clear rate is finishers divided by players. This show the approximate
-					difficulty of the level.<br />The lower the percentage, the harder the
+					difficulty of the level.<br />The lower the clear rate, the harder the
 					level.
 				</footer>
 				<div class="mt-8 flex items-center">
