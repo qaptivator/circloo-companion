@@ -15,6 +15,7 @@
 				<!-- should i make the sidebar bg-primary-400? edit: yes i do, or else the buttons just disappear in light mode -->
 				<!-- class="... border-r" style="border-color: var(--p-form-field-border-color)" -->
 				<h1
+					@click="navigateTo('/')"
 					class="flex items-center justify-center space-x-4 text-xl font-bold w-full cursor-pointer"
 					:class="{ '!p-0': isDesktop }"
 				>
@@ -89,8 +90,17 @@
 					</li>
 				</ul>
 			</aside>
-			<main class="flex-1 p-8 overflow-y-auto h-full">
-				<slot />
+			<main class="flex-1 overflow-y-auto h-full flex flex-col">
+				<div class="p-8 flex-1">
+					<slot />
+				</div>
+				<footer
+					class="w-full dark:bg-surface-900 bg-gray-100 text-gray-400 dark:text-surface-600 p-4"
+				>
+					This website is not affiliated with circloO nor Florian van Strien.
+					Licensed under GPL-3.0. Static website hosted on GitHub Pages. Backend
+					hosted on Vercel.
+				</footer>
 			</main>
 		</div>
 	</div>

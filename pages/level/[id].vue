@@ -222,6 +222,10 @@
 						severity="contrast"
 					></Button>
 				</div>
+				<span
+					>Moderation status:
+					{{ level?.moderationStatus ?? ModerationStatus.Unknown }}
+				</span>
 				<div class="mt-4 flex items-center opacity-50">
 					<span>Level ID: {{ level?.id ? level?.id : 'unknown' }}</span>
 					<Button
