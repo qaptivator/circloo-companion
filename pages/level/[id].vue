@@ -2,7 +2,7 @@
 	<div class="w-full h-full">
 		<div
 			v-if="loading && !notFound"
-			class="flex space-x-8 w-full h-full"
+			class="flex flex-col lg:flex-row space-x-8 w-full h-full"
 		>
 			<Skeleton
 				shape="circle"
@@ -174,7 +174,7 @@
 						></InputGroupAddon>
 					</InputGroup>
 					<InputGroup class="!w-80">
-						<InputGroupAddon class="!rounded-t-none !w-36"
+						<InputGroupAddon class="!rounded-none !w-36"
 							>Player</InputGroupAddon
 						>
 						<InputText
@@ -185,11 +185,24 @@
 							readonly
 						/>
 						<InputGroupAddon
-							class="!w-10 !rounded-t-none"
+							class="!w-10 !rounded-none"
 							:style="{
 								'background-color': vector3ToStyle(colorPalette.player),
 							}"
 						></InputGroupAddon>
+					</InputGroup>
+					<InputGroup class="!w-80">
+						<InputGroupAddon class="!rounded-t-none !w-36"
+							>Editor hue</InputGroupAddon
+						>
+						<InputText
+							class="!rounded-t-none"
+							tabindex="0"
+							@focus="selectAllOnFocus"
+							:modelValue="(level?.color || 0).toString()"
+							placeholder="Hue Number"
+							readonly
+						/>
 					</InputGroup>
 				</div>
 				<!-- wait, i think its actually better to use gap instead of space in flexboxes and grids. edit: i eventually just ended up using gap lol -->
