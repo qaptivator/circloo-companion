@@ -307,7 +307,7 @@ export type LevelColorPalette = {
 	player: Vector3
 }
 
-function _getColorPaletteRaw(hue: number): LevelColorPalette {
+export function getColorPaletteRaw(hue: number): LevelColorPalette {
 	const c_black = { x: 0, y: 0, z: 0 }
 	const c_gray = { x: 128, y: 128, z: 128 }
 
@@ -328,7 +328,18 @@ function _getColorPaletteRaw(hue: number): LevelColorPalette {
 }
 
 export function getColorPalette(level: Level): LevelColorPalette {
-	return _getColorPaletteRaw(level.color)
+	return getColorPaletteRaw(level.color)
+}
+
+const _ZERO: Vector3 = {
+	x: 0,
+	y: 0,
+	z: 0,
+}
+export const ZeroColorPalette: LevelColorPalette = {
+	background: _ZERO,
+	main: _ZERO,
+	player: _ZERO,
 }
 
 // this is what comes from the api

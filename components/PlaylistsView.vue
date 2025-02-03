@@ -44,14 +44,14 @@ const searchModeOptions: Ref<SelectOptions> = ref([
 const searchMode: Ref<SelectOption> = ref({ label: 'Name', value: 'name' })
 
 onMounted(() => {
-	console.log(
+	/*console.log(
 		playlistToQuery({
 			name: 'hello world',
 			creator: 'the guy',
 			color: 231,
 			levels: ['2afujiqaw', '12qwsdjuf', 'a1281221'],
 		})
-	)
+	)*/
 })
 </script>
 <style scoped lang="css"></style>

@@ -224,6 +224,10 @@
 						disabled
 						label="Download level content (WIP)"
 					></Button>
+					<Button
+						@click="shareLevel"
+						label="Share level"
+					></Button>
 				</div>
 				<div class="mt-8 flex items-center">
 					<span
@@ -511,6 +515,10 @@ function copyCreationTime() {
 
 function copyId() {
 	if (level.value?.id) copyToClipboard(level.value?.id)
+}
+
+function shareLevel() {
+	copyToClipboard(window.location.origin + route.fullPath)
 }
 </script>
 <style scoped lang="css"></style>

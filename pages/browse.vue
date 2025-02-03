@@ -12,7 +12,11 @@
 				}"
 			>
 				<Tab value="0">Search</Tab>
-				<Tab value="1">Playlists</Tab>
+				<Tab
+					value="1"
+					disabled
+					>Playlists WIP</Tab
+				>
 				<Tab
 					value="2"
 					disabled
