@@ -2,61 +2,6 @@
 	<div
 		class="w-full flex flex-col items-center justify-center space-y-4 h-full"
 	>
-		<!-- add h-full to root to make it take up the entire screen -->
-		<!--<h1
-			class="text-2xl font-bold"
-			style="text-align: center"
-		>
-			Browse player-created levels
-		</h1>
-		<header class="flex space-x-2 w-full max-w-[800px]">
-			<Button
-				@click="test"
-				label="Featured"
-				fluid
-			></Button>
-			<Button
-				label="Newest"
-				fluid
-			></Button>
-			<Button
-				label="Fresh"
-				fluid
-			></Button>
-			<Button
-				label="Playlists"
-				fluid
-			></Button>
-			<Button
-				label="Yours (WIP)"
-		<header class="flex space-x-2 w-full max-w-[800px]">
-			<Button
-				@click="test"
-				label="Featured"
-				fluid
-			></Button>
-			<Button
-				label="Newest"
-				fluid
-			></Button>
-			<Button
-				label="Fresh"
-				fluid
-			></Button>
-			<Button
-				label="Playlists"
-				fluid
-			></Button>
-			<Button
-				label="Yours (WIP)"
-				disabled
-				fluid
-			></Button>
-		</header>-->
-		<!--<Button
-			@click="test2"
-			label="Test api"
-		></Button>-->
 		<Tabs
 			value="0"
 			class="!w-full !h-full"
