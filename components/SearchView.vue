@@ -48,12 +48,8 @@
 				<!-- fixme: FloatLabel appears on top of MultiSelect's placeholder when not focused. FIXED by adding p-inputwrapper-filled" into classes -->
 				<MultiSelect
 					v-model="filterMode"
+					:options="filterModeOptions"
 					id="filterMode-select"
-					:options="[
-						{ label: 'Featured', value: 'featured' },
-						{ label: 'Highly Rated', value: 'highly-rated' },
-						{ label: 'Recent', value: 'recent' },
-					]"
 					optionLabel="label"
 					placeholder="Filter by..."
 					filter
@@ -166,6 +162,9 @@
 	</div>
 </template>
 <script setup lang="ts">
+const router = useRouter()
+const route = useRoute()
+
 // TODO: add types here
 const searchQuery: Ref<string> = ref('')
 
@@ -185,6 +184,18 @@ const sortMode: Ref<
 	  }
 	| undefined
 > = ref({ label: 'Newest', value: 'newest' })
+
+const filterModeOptions: Ref<
+	| {
+			label: string
+			value: string
+	  }[]
+	| undefined
+> = ref([
+	{ label: 'Featured', value: 'featured' },
+	{ label: 'Highly Rated', value: 'highly-rated' },
+	{ label: 'Recent', value: 'recent' },
+])
 
 const filterMode: Ref<
 	| {
@@ -210,8 +221,9 @@ const showAllLevels: Ref<boolean> = ref(false)
 const fetchedLevels: Ref<Level[]> = ref([])
 const showAdvanced: Ref<boolean> = ref(false)
 
+// todo: add timeout for this. ok, probably not. but idk. maybe i should rate limit this... but vercel should rate limit it for me, am i right?
+watch(searchQuery, fetchLevels)
 watch(searchMode, fetchLevels)
-watch(searchQuery, fetchLevels) // todo: add timeout for this
 watch(sortMode, fetchLevels)
 watch(filterMode, fetchLevels)
 watch(duration, fetchLevels)
@@ -219,27 +231,112 @@ watch(page, fetchLevels)
 watch(itemsPerPage, fetchLevels)
 watch(showAllLevels, fetchLevels)
 
+type PageParamsQuery = {
+	searchQuery?: string
+	searchMode?: string
+	sortMode?: string
+	filterMode?: string[]
+	duration?: string
+	page?: number
+	itemsPerPage?: number
+	showAllLevels?: number // undefined for false, 1 for true. booleans are not supported in url queries
+}
+
 onMounted(() => {
 	//sortMode.value = { label: 'Newest', value: 'newest' }
 	//duration.value = { label: 'None', value: 'none' }
 	fetchLevels()
+	recoverParamsFromRoute()
 })
 
-function modifyPage(val: number) {
-	const newPage = page.value + val
-	if (newPage > 0) {
-		page.value = newPage
-		return true
-	} else {
-		return false
-	}
+const silenceWatchers = ref(false)
+function recoverParamsFromRoute() {
+	silenceWatchers.value = true
+	const query: PageParamsQuery = route.query
+
+	if (query.searchQuery) searchQuery.value = query.searchQuery
+
+	if (query.searchMode)
+		searchMode.value = { label: query.searchMode, value: query.searchMode }
+
+	if (query.sortMode)
+		sortMode.value = { label: query.sortMode, value: query.sortMode }
+
+	if (query.filterMode)
+		filterMode.value = query.filterMode.map((v) => {
+			return { label: v, value: v }
+		})
+	// i honestly quite hate this piece of code
+	/*filterMode.value = query.filterMode.map((v) => ({
+			label:
+				filterModeOptions.value?.find((q) => {
+					q.value === v
+				})?.label ?? v,
+			value: v,
+		}))*/
+
+	if (query.duration)
+		duration.value = { label: query.duration, value: query.duration }
+
+	if (query.page) page.value = query.page
+
+	if (query.itemsPerPage) itemsPerPage.value = query.itemsPerPage
+
+	if (query.showAllLevels) showAllLevels.value = query.showAllLevels === 1
+
+	silenceWatchers.value = false
 }
 
 async function fetchLevels() {
+	if (silenceWatchers.value) return
 	//fetchedLevels.value = []
 	//fetchedLevels.value = await getLevels(sortMode)
 
-	let query = ''
+	// --- router ---
+
+	let routerQuery: PageParamsQuery = {}
+
+	if (searchQuery.value) routerQuery.searchQuery = searchQuery.value
+
+	if (
+		searchMode.value &&
+		searchMode.value?.value &&
+		searchMode.value.value !== 'name'
+	)
+		routerQuery.searchMode = searchMode.value.value
+
+	if (
+		sortMode.value &&
+		sortMode.value?.value &&
+		sortMode.value.value !== 'newest'
+	)
+		routerQuery.sortMode = sortMode.value.value
+
+	if (filterMode.value && filterMode.value[0].value !== 'featured')
+		routerQuery.filterMode = filterMode.value.map((v) => v.value)
+
+	if (
+		duration.value &&
+		duration.value?.value &&
+		duration.value.value !== 'none'
+	)
+		routerQuery.duration = duration.value.value
+
+	if (page.value && page.value !== 0) routerQuery.page = page.value
+
+	if (itemsPerPage.value && itemsPerPage.value !== 10)
+		routerQuery.itemsPerPage = itemsPerPage.value
+
+	if (showAllLevels.value) routerQuery.showAllLevels = 1
+
+	router.replace({
+		path: route.path,
+		query: routerQuery,
+	})
+
+	// --- fetching ---
+
+	let fetchQuery = ''
 
 	// sortMode
 	// these checks for value in refs are probably useless but whatever
@@ -251,13 +348,13 @@ async function fetchLevels() {
 			//query += 'sort:newest '
 			//	break
 			case 'oldest':
-				query += 'sort:oldest '
+				fetchQuery += 'sort:oldest '
 				break
 			case 'stars':
-				query += 'sort:stars '
+				fetchQuery += 'sort:stars '
 				break
 			case 'plays':
-				query += 'sort:plays '
+				fetchQuery += 'sort:plays '
 				break
 		}
 	}
@@ -269,7 +366,7 @@ async function fetchLevels() {
 		SORT_MODE_LOOKUP[sortMode.value?.value]
 	) {
 		// @ts-ignore
-		query += SORT_MODE_LOOKUP[sortMode.value?.value] ?? ''
+		fetchQuery += SORT_MODE_LOOKUP[sortMode.value?.value] ?? ''
 	}*/
 
 	// filterMode and duration
@@ -289,7 +386,7 @@ async function fetchLevels() {
 		filters.push(duration.value?.value)
 	}
 	if (filters && filters.length > 0) {
-		query += `filter:${filters.join(',')} `
+		fetchQuery += `filter:${filters.join(',')} `
 	}
 
 	// searchQuery
@@ -297,10 +394,10 @@ async function fetchLevels() {
 		if (searchMode.value?.value === 'creator') {
 			// filters dont work here
 			// todo: add a notice that filters dont work with creator and id
-			query = `Levels by ${searchQuery.value}`
+			fetchQuery = `Levels by ${searchQuery.value}`
 		} else {
 			// rookie mistake 2: append just the ref instead of its value
-			query += searchQuery.value
+			fetchQuery += searchQuery.value
 		}
 	}
 
@@ -314,10 +411,10 @@ async function fetchLevels() {
 			realPage.value,
 			itemsPerPage.value > 0 ? itemsPerPage.value ?? 10 : 10,
 			showAllLevels.value ? Spec.All : Spec.Modded,
-			query
+			fetchQuery
 		)
 	} else if (searchMode.value?.value === 'id') {
-		levels = await getLevelsById([query])
+		levels = await getLevelsById([fetchQuery])
 	}
 
 	/* oops, this just prevents any levels from showing if results are not found
@@ -325,6 +422,16 @@ async function fetchLevels() {
 		fetchedLevels.value = levels
 	}*/
 	fetchedLevels.value = levels
+}
+
+function modifyPage(val: number) {
+	const newPage = page.value + val
+	if (newPage > 0) {
+		page.value = newPage
+		return true
+	} else {
+		return false
+	}
 }
 
 // todo: add "showClear" to MultiSelect to add a selection clearing bubtton (unfortunately the button just clips inside your selections)
