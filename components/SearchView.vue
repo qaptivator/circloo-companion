@@ -10,12 +10,8 @@
 				<InputGroupAddon>
 					<Select
 						v-model="searchMode"
+						:options="searchModeOptions"
 						id="searchMode-select"
-						:options="[
-							{ label: 'Name', value: 'name' },
-							{ label: 'Creator', value: 'creator' },
-							{ label: 'ID', value: 'id' },
-						]"
 						optionLabel="label"
 						placeholder="Search"
 						class="!min-w-20"
@@ -30,13 +26,8 @@
 			<FloatLabel variant="on">
 				<Select
 					v-model="sortMode"
+					:options="sortModeOptions"
 					id="sortMode-select"
-					:options="[
-						{ label: 'Newest', value: 'newest' },
-						{ label: 'Oldest', value: 'oldest' },
-						{ label: 'Stars', value: 'stars' },
-						{ label: 'Plays', value: 'plays' },
-					]"
 					optionLabel="label"
 					placeholder="Sort by..."
 					class="!min-w-48"
@@ -62,15 +53,8 @@
 			<FloatLabel variant="on">
 				<Select
 					v-model="duration"
+					:options="durationOptions"
 					id="duration-select"
-					:options="[
-						{ label: 'None', value: 'none' },
-						{ label: 'XS (<20s)', value: 'xs' },
-						{ label: 'Short (20-60s)', value: 'short' },
-						{ label: 'Medium (60-180s)', value: 'medium' },
-						{ label: 'Long (180-600s)', value: 'long' },
-						{ label: 'XL (>600s)', value: 'xl' },
-					]"
 					optionLabel="label"
 					placeholder="Avg duration..."
 					class="!min-w-48"
@@ -165,53 +149,58 @@
 const router = useRouter()
 const route = useRoute()
 
+type SelectOption =
+	| {
+			label: string
+			value: string
+	  }
+	| undefined
+type SelectOptions = {
+	label: string
+	value: string
+}[]
+
 // TODO: add types here
 const searchQuery: Ref<string> = ref('')
 
 // what the hell is this :skull:
-const searchMode: Ref<
-	| {
-			label: string
-			value: string
-	  }
-	| undefined
-> = ref({ label: 'Name', value: 'name' })
+const searchModeOptions: Ref<SelectOptions> = ref([
+	{ label: 'Name', value: 'name' },
+	{ label: 'Creator', value: 'creator' },
+	{ label: 'ID', value: 'id' },
+])
+const searchMode: Ref<SelectOption> = ref({ label: 'Name', value: 'name' })
 
-const sortMode: Ref<
-	| {
-			label: string
-			value: string
-	  }
-	| undefined
-> = ref({ label: 'Newest', value: 'newest' })
+const sortModeOptions: Ref<SelectOptions> = ref([
+	{ label: 'Newest', value: 'newest' },
+	{ label: 'Oldest', value: 'oldest' },
+	{ label: 'Stars', value: 'stars' },
+	{ label: 'Plays', value: 'plays' },
+])
+const sortMode: Ref<SelectOption> = ref({ label: 'Newest', value: 'newest' })
 
-const filterModeOptions: Ref<
-	| {
-			label: string
-			value: string
-	  }[]
-	| undefined
-> = ref([
+const filterModeOptions: Ref<SelectOptions> = ref([
 	{ label: 'Featured', value: 'featured' },
 	{ label: 'Highly Rated', value: 'highly-rated' },
 	{ label: 'Recent', value: 'recent' },
 ])
-
 const filterMode: Ref<
 	| {
 			label: string
 			value: string
 	  }[]
 	| undefined
-> = ref([{ label: 'Featured', value: 'featured' }])
+> = ref([{ label: 'Featured', value: 'featured' }]) // it is a MultiSelect, not Select
 
-const duration: Ref<
-	| {
-			label: string
-			value: string
-	  }
-	| undefined
-> = ref({ label: 'None', value: 'none' })
+const durationOptions: Ref<SelectOptions> = ref([
+	{ label: 'None', value: 'none' },
+	{ label: 'XS (<20s)', value: 'xs' },
+	{ label: 'Short (20-60s)', value: 'short' },
+	{ label: 'Medium (60-180s)', value: 'medium' },
+	{ label: 'Long (180-600s)', value: 'long' },
+	{ label: 'XL (>600s)', value: 'xl' },
+])
+const duration: Ref<SelectOption> = ref({ label: 'None', value: 'none' })
 
 const page: Ref<number> = ref(1)
 const realPage = computed(() => page.value - 1)
@@ -252,20 +241,55 @@ onMounted(() => {
 const silenceWatchers = ref(false)
 function recoverParamsFromRoute() {
 	silenceWatchers.value = true
+
+	const _createLookupTable = (arr: SelectOptions) => {
+		return arr.reduce((acc, obj) => {
+			acc[obj.value] = obj.label
+			return acc
+		}, {} as { [key: string]: string })
+	}
+
 	const query: PageParamsQuery = route.query
 
 	if (query.searchQuery) searchQuery.value = query.searchQuery
 
+	const _searchModeLookup = _createLookupTable(searchModeOptions.value)
 	if (query.searchMode)
-		searchMode.value = { label: query.searchMode, value: query.searchMode }
+		searchMode.value = {
+			label: _searchModeLookup[query.searchMode],
+			value: query.searchMode,
+		}
 
+	const _sortModeLookup = _createLookupTable(sortModeOptions.value)
 	if (query.sortMode)
-		sortMode.value = { label: query.sortMode, value: query.sortMode }
+		sortMode.value = {
+			label: _sortModeLookup[query.sortMode],
+			value: query.sortMode,
+		}
 
-	if (query.filterMode)
-		filterMode.value = query.filterMode.map((v) => {
-			return { label: v, value: v }
-		})
+	// oh, i need to specify the type of the key...
+	/*const filterModeLookup: { [key: string]: string } = {
+		featured: 'Featured',
+		'highly-rated': 'Highly rated',
+		recent: 'Recent',
+	}*/
+	const _filterModeLookup = _createLookupTable(filterModeOptions.value)
+	if (query.filterMode) {
+		if (Array.isArray(query.filterMode)) {
+			filterMode.value = query.filterMode.map((v) => {
+				return { label: _filterModeLookup[v], value: v }
+			})
+		} else {
+			filterMode.value = [
+				{
+					label: _filterModeLookup[query.filterMode],
+					value: query.filterMode,
+				},
+			]
+		}
+		//console.log('filterMode.value', filterMode.value)
+	}
+
 	// i honestly quite hate this piece of code
 	/*filterMode.value = query.filterMode.map((v) => ({
 			label:
@@ -275,8 +299,12 @@ function recoverParamsFromRoute() {
 			value: v,
 		}))*/
 
+	const _durationookup = _createLookupTable(durationOptions.value)
 	if (query.duration)
-		duration.value = { label: query.duration, value: query.duration }
+		duration.value = {
+			label: _durationookup[query.duration],
+			value: query.duration,
+		}
 
 	if (query.page) page.value = query.page
 
@@ -300,31 +328,31 @@ async function fetchLevels() {
 
 	if (
 		searchMode.value &&
-		searchMode.value?.value &&
-		searchMode.value.value !== 'name'
+		searchMode.value?.value /*&&
+		searchMode.value.value !== 'name'*/
 	)
 		routerQuery.searchMode = searchMode.value.value
 
 	if (
 		sortMode.value &&
-		sortMode.value?.value &&
-		sortMode.value.value !== 'newest'
+		sortMode.value?.value /*&&
+		sortMode.value.value !== 'newest'*/
 	)
 		routerQuery.sortMode = sortMode.value.value
 
-	if (filterMode.value && filterMode.value[0].value !== 'featured')
+	if (filterMode.value /*&& filterMode.value[0].value !== 'featured'*/)
 		routerQuery.filterMode = filterMode.value.map((v) => v.value)
 
 	if (
 		duration.value &&
-		duration.value?.value &&
-		duration.value.value !== 'none'
+		duration.value?.value /*&&
+		duration.value.value !== 'none'*/
 	)
 		routerQuery.duration = duration.value.value
 
-	if (page.value && page.value !== 0) routerQuery.page = page.value
+	if (page.value /*&& page.value !== 1*/) routerQuery.page = page.value
 
-	if (itemsPerPage.value && itemsPerPage.value !== 10)
+	if (itemsPerPage.value /*&& itemsPerPage.value !== 10*/)
 		routerQuery.itemsPerPage = itemsPerPage.value
 
 	if (showAllLevels.value) routerQuery.showAllLevels = 1
