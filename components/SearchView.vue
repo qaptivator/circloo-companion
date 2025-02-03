@@ -21,36 +21,7 @@
 						class="!min-w-20"
 					/>
 				</InputGroupAddon>
-				<!--<InputGroupAddon>
-					<Button
-						@click="showAdvanced = !showAdvanced"
-						icon="pi pi-cog"
-						variant="outlined"
-						severity="contrast"
-					></Button>
-				</InputGroupAddon>-->
-				<!--<InputGroupAddon>
-					<i class="pi pi-search"> </i>
-				</InputGroupAddon>-->
 			</InputGroup>
-			<!--<InputGroup>
-				<InputGroupAddon>
-					<Button
-						@click="showAdvanced = !showAdvanced"
-						icon="pi pi-cog"
-						variant="outlined"
-						severity="contrast"
-					></Button>
-				</InputGroupAddon>
-				<InputGroupAddon>
-					<Button
-						@click="showAdvanced = !showAdvanced"
-						icon="pi pi-cog"
-						variant="outlined"
-						severity="contrast"
-					></Button>
-				</InputGroupAddon>
-			</InputGroup>-->
 		</div>
 
 		<!-- filters and stuff -->
@@ -148,21 +119,6 @@
 				<label for="itemsPerPage-select">Items per page</label>
 			</FloatLabel>
 		</div>
-
-		<!-- page selector 
-		 oops i cant use the paginator component because i have no idea how many pages i have -->
-		<!--<Paginator
-			:template="{
-				default: 'FirstPageLink PrevPageLink JumpToPageInput NextPageLink',
-			}"
-			:rows="10"
-			:totalRecords="120"
-		>
-			<template #start="slotProps">
-				Page: {{ slotProps.state.page }} First:
-				{{ slotProps.state.first }} Rows: {{ slotProps.state.rows }}
-			</template>
-		</Paginator>-->
 
 		<!-- the ACTUAL page selector -->
 		<!-- todo: make the InputNumber's smaller for gods sake. i cant figure out how to make them smaller, even with passthrough... -->
