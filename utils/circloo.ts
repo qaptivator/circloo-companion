@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const BASE_URL = 'https://circloo-api-vercel.vercel.app/api/'
-const LATEST_VERSION = 8
+export const LATEST_VERSION = 8
 const DEVICE_ID = '0'
 
 // TODO: add api request timeout, so that florians servers wont get blasted with requests

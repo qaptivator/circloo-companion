@@ -76,7 +76,7 @@
 			class="flex space-x-4 justify-center"
 		>
 			<!-- todo: add more options such as "show all levels" or "version number" -->
-			<div class="flex items-center gap-2">
+			<!--<div class="flex items-center gap-2">
 				<ToggleSwitch
 					v-model="showAllLevels"
 					id="showAllLevels-select"
@@ -84,7 +84,20 @@
 				<label for="showAllLevels-select"
 					>Show all levels (even unmodded ones)</label
 				>
-			</div>
+			</div>-->
+			<!-- TODO: finish version selection -->
+			<!--FloatLabel variant="on">
+				<InputNumber
+					v-model="versionNumber"
+					id="versionNumber-select"
+					inputId="minmax"
+					:useGrouping="false"
+					:min="0"
+					:max="LATEST_VERSION"
+				>
+				</InputNumber>
+				<label for="versionNumber-select">Version</label>
+			</FloatLabel>-->
 			<FloatLabel variant="on">
 				<InputNumber
 					v-model="itemsPerPage"
@@ -95,7 +108,14 @@
 					:max="20"
 					showButtons
 					buttonLayout="horizontal"
-				/>
+				>
+					<template #incrementicon>
+						<span class="pi pi-chevron-right" />
+					</template>
+					<template #decrementicon>
+						<span class="pi pi pi-chevron-left" />
+					</template>
+				</InputNumber>
 				<label for="itemsPerPage-select">Items per page</label>
 			</FloatLabel>
 		</div>
@@ -112,12 +132,14 @@
 					:min="1"
 					showButtons
 					buttonLayout="horizontal"
-					><template #incrementicon>
+				>
+					<template #incrementicon>
 						<span class="pi pi-chevron-right" />
 					</template>
 					<template #decrementicon>
-						<span class="pi pi pi-chevron-left" /> </template
-				></InputNumber>
+						<span class="pi pi pi-chevron-left" />
+					</template>
+				</InputNumber>
 				<label for="page-select">Page</label>
 			</FloatLabel>
 		</div>
@@ -205,7 +227,8 @@ const duration: Ref<SelectOption> = ref({ label: 'None', value: 'none' })
 const page: Ref<number> = ref(1)
 const realPage = computed(() => page.value - 1)
 const itemsPerPage: Ref<number> = ref(10)
-const showAllLevels: Ref<boolean> = ref(false)
+//const showAllLevels: Ref<boolean> = ref(false)
+const versionNumber: Ref<number> = ref(LATEST_VERSION)
 
 const fetchedLevels: Ref<Level[]> = ref([])
 const showAdvanced: Ref<boolean> = ref(false)
@@ -218,7 +241,7 @@ watch(filterMode, fetchLevels)
 watch(duration, fetchLevels)
 watch(page, fetchLevels)
 watch(itemsPerPage, fetchLevels)
-watch(showAllLevels, fetchLevels)
+//watch(showAllLevels, fetchLevels)
 
 type PageParamsQuery = {
 	searchQuery?: string
@@ -228,7 +251,7 @@ type PageParamsQuery = {
 	duration?: string
 	page?: number
 	itemsPerPage?: number
-	showAllLevels?: number // undefined for false, 1 for true. booleans are not supported in url queries
+	//showAllLevels?: number // undefined for false, 1 for true. booleans are not supported in url queries
 }
 
 onMounted(() => {
@@ -310,7 +333,7 @@ function recoverParamsFromRoute() {
 
 	if (query.itemsPerPage) itemsPerPage.value = query.itemsPerPage
 
-	if (query.showAllLevels) showAllLevels.value = query.showAllLevels === 1
+	//if (query.showAllLevels) showAllLevels.value = query.showAllLevels === 1
 
 	silenceWatchers.value = false
 }
@@ -355,7 +378,7 @@ async function fetchLevels() {
 	if (itemsPerPage.value /*&& itemsPerPage.value !== 10*/)
 		routerQuery.itemsPerPage = itemsPerPage.value
 
-	if (showAllLevels.value) routerQuery.showAllLevels = 1
+	//if (showAllLevels.value) routerQuery.showAllLevels = 1
 
 	router.replace({
 		path: route.path,
@@ -438,8 +461,10 @@ async function fetchLevels() {
 			SortMode.Search,
 			realPage.value,
 			itemsPerPage.value > 0 ? itemsPerPage.value ?? 10 : 10,
-			showAllLevels.value ? Spec.All : Spec.Modded,
+			Spec.Modded,
+			//showAllLevels.value ? Spec.All : Spec.Modded,
 			fetchQuery
+			// versionNumber.value
 		)
 	} else if (searchMode.value?.value === 'id') {
 		levels = await getLevelsById([fetchQuery])
