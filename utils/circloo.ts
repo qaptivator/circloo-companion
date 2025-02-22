@@ -1,8 +1,24 @@
-import axios from 'axios'
+//import axios from 'axios'
+import type { AxiosInstance } from 'axios'
+import { useNuxtApp } from '#app'
+
+function useAxios(): AxiosInstance {
+	const { $axios } = useNuxtApp()
+	return $axios as AxiosInstance
+}
 
 const BASE_URL = 'https://circloo-api-vercel.vercel.app/api/'
 export const LATEST_VERSION = 8
 const DEVICE_ID = '0'
+
+function uuid() {
+	return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
+		(
+			+c ^
+			(crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))
+		).toString(16)
+	)
+}
 
 // TODO: add api request timeout, so that florians servers wont get blasted with requests
 
@@ -53,10 +69,12 @@ function _getBasicPayload() {
 
 async function _postRequest<T>(endpoint: string, payload: any): Promise<T> {
 	try {
+		const axios = useAxios()
 		//const response = await axios.post(BASE_URL + endpoint, payload)
 		const response = await axios({
 			method: 'POST',
-			url: BASE_URL + endpoint,
+			url: endpoint,
+			//url: BASE_URL + endpoint,
 			params: payload, // im such a dumb dumb, i should use params instead of data (body)!
 		})
 		return response.data as T

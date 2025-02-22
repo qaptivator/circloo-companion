@@ -12,13 +12,10 @@
 				}"
 			>
 				<Tab value="0">Search</Tab>
+				<Tab value="1">Playlists</Tab>
+				<Tab value="2">Custom Playlists</Tab>
 				<Tab
-					value="1"
-					disabled
-					>Playlists WIP</Tab
-				>
-				<Tab
-					value="2"
+					value="3"
 					disabled
 					>Yours (WIP)</Tab
 				>
@@ -35,6 +32,9 @@
 					<PlaylistsView />
 				</TabPanel>
 				<TabPanel value="2">
+					<PlaylistsView />
+				</TabPanel>
+				<TabPanel value="3">
 					<p class="m-0">
 						At vero eos et accusamus et iusto odio dignissimos ducimus qui
 						blanditiis praesentium voluptatum deleniti atque corrupti quos
@@ -50,7 +50,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import axios from 'axios'
+/*import axios from 'axios'
 function test() {
 	axios({
 		method: 'GET',
@@ -81,6 +81,6 @@ function test2() {
 	}).then((res) => {
 		console.log(res.data)
 	})
-}
+}*/
 </script>
 <style scoped lang="css"></style>
