@@ -2,7 +2,7 @@
 	<div class="flex flex-col space-y-4 items-center">
 		<!-- search query -->
 		<div class="flex space-x-4 justify-center">
-			<InputGroup class="!w-[500px]">
+			<InputGroup class="!w-[300px] md:!w-[500px]">
 				<InputText
 					v-model="searchQuery"
 					placeholder="Level name, creator, ID..."
@@ -21,7 +21,7 @@
 		</div>
 
 		<!-- filters and stuff -->
-		<div class="flex space-x-4 justify-center">
+		<div class="flex flex-wrap md:flex-nowrap gap-4 justify-center">
 			<!-- TODO: add "search by creator" option, which just prepends "Levels by " to the search query -->
 			<FloatLabel variant="on">
 				<Select
@@ -146,7 +146,9 @@
 
 		<!-- the actual levels -->
 		<!-- todo: handle level previews overflowing on smaller devices -->
-		<div class="grid grid-rows-2 grid-cols-5 gap-4 relative">
+		<div
+			class="grid grid-rows-5 grid-cols-2 md:grid-rows-2 md:grid-cols-5 gap-4 relative"
+		>
 			<div v-for="level in fetchedLevels">
 				<!--{{ level.name }}-->
 				<LevelPreview :level="level" />

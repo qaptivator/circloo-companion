@@ -208,8 +208,8 @@
 				<!-- wait, i think its actually better to use gap instead of space in flexboxes and grids. edit: i eventually just ended up using gap lol -->
 				<div class="mt-8 flex flex-wrap gap-4">
 					<Button
-						:label="`More levels by ${level?.creator} (WIP)`"
-						disabled
+						@click="moreLevelsByCreator"
+						:label="`More levels by ${level?.creator}`"
 					></Button>
 					<Button
 						@click="downloadThumbnail"
@@ -519,6 +519,12 @@ function copyId() {
 
 function shareLevel() {
 	copyToClipboard(window.location.origin + route.fullPath)
+}
+
+function moreLevelsByCreator() {
+	navigateTo(
+		`/browse?searchMode=creator&searchQuery=${level.value?.creator}&sortMode=newest&filterMode=featured&duration=none&page=1&itemsPerPage=10`
+	)
 }
 </script>
 <style scoped lang="css"></style>

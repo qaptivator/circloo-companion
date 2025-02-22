@@ -58,7 +58,7 @@ function clicked() {
 			props.level.moderationStatus === ModerationStatus.Unmodded
 		// why do i have to use such shenanigans in typescript to just compare two values of an enum? thats weird...
 	)*/
-	if (props.level?.id) navigateTo(`level/${props.level?.id}`)
+	if (props.level?.id) navigateTo(`/level/${props.level?.id}`)
 }
 
 const clearRate = computed(() => {
