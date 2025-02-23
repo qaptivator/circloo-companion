@@ -14,7 +14,13 @@ export function playlistToQuery(playlist: Playlist): string {
 	//return LZString.compressToEncodedURIComponent(JSON.stringify(playlist))
 }
 
-export function queryToPlaylist(query: string): Playlist {
-	return JSON.parse(decodeURIComponent(query)) as Playlist
+export function queryToPlaylist(query: string): Playlist | undefined {
 	//return JSON.parse(LZString.decompressFromEncodedURIComponent(query))
+	const parsed = JSON.parse(decodeURIComponent(query)) as Playlist
+	if (!parsed.color) parsed.color = 0 // default playlist color here
+	return parsed.name && parsed.levels ? parsed : undefined
+}
+
+export function nameToParam(playlist: Playlist): string {
+	return encodeURIComponent(playlist.name.replace(/\s/g, ''))
 }

@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="w-full flex flex-col items-center justify-center space-y-4 h-full"
+		class="w-full flex flex-col items-center justify-center space-y-4 h-full bg-transparent"
 	>
 		<Tabs
 			value="0"
@@ -8,21 +8,30 @@
 		>
 			<TabList
 				:pt="{
-					tablist: '!justify-center !rounded-t-xl',
+					tablist:
+						'!justify-center !rounded-t-xl dark:!bg-surface-900 !bg-gray-100',
 				}"
 			>
 				<Tab value="0">Search</Tab>
-				<Tab value="1">Playlists</Tab>
-				<Tab value="2">Custom Playlists</Tab>
+				<Tab
+					value="2"
+					disabled
+					>Custom Playlists (WIP)</Tab
+				>
 				<Tab
 					value="3"
 					disabled
 					>Yours (WIP)</Tab
 				>
+				<Tab
+					value="1"
+					disabled
+					>Playlists (WIP)</Tab
+				>
 			</TabList>
 			<TabPanels
 				:pt="{
-					root: '!rounded-b-xl !h-full',
+					root: '!rounded-b-xl !h-full dark:!bg-surface-900 !bg-gray-100',
 				}"
 			>
 				<TabPanel value="0">

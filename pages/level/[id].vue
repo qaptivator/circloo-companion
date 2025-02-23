@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full h-full">
 		<div
-			v-if="loading && !notFound"
+			v-if="loading && !invalid"
 			class="flex flex-col lg:flex-row space-x-8 w-full h-full"
 		>
 			<Skeleton
@@ -15,7 +15,7 @@
 			/>
 		</div>
 		<div
-			v-if="!loading && notFound"
+			v-if="!loading && invalid"
 			class="flex flex-col items-center justify-center h-full"
 		>
 			<h1 class="text-4xl mb-4">Level not found</h1>
@@ -28,7 +28,7 @@
 		<!-- v-show just doesnt render the element, but it is still processed -->
 		<!-- TODO: add AdvancedLevelInfo stats somewhere in the ui (that includes the leaderboard) -->
 		<div
-			v-show="!loading && !notFound"
+			v-show="!loading && !invalid"
 			class="flex flex-col lg:flex-row gap-8 w-full h-full"
 		>
 			<client-only>
@@ -273,7 +273,7 @@ const route = useRoute()
 const toast = useToast()
 
 const loading = ref(true)
-const notFound = ref(false)
+const invalid = ref(false)
 const level: Ref<Level | undefined> = ref()
 
 onMounted(async () => {
@@ -285,12 +285,12 @@ onMounted(async () => {
 	// im turning it from "definitely string" or "possibly an array" into "definitely an array" lol
 	const levels = await getLevelsById([levelId])
 
-	loading.value = false
 	if (levels.length > 0) {
 		level.value = levels[0]
 	} else {
-		notFound.value = true
+		invalid.value = true
 	}
+	loading.value = false
 })
 
 function downloadLevel() {}
@@ -396,6 +396,11 @@ async function downloadThumbnail() {
 			level.value.imageURI
 		)
 		downloadFile(drawnThumbnail, `${level.value.name}-thumbnail.png`)
+		toast.add({
+			severity: 'success',
+			summary: 'Successfully downloaded thumbnail',
+			life: 3000,
+		})
 	} else {
 		toast.add({
 			severity: 'error',
@@ -413,6 +418,11 @@ function downloadRawThumbnail() {
 			level.value.imageURI,
 			`${level.value.name}-thumbnail-borders.png`
 		)
+		toast.add({
+			severity: 'success',
+			summary: 'Successfully downloaded thumbnail',
+			life: 3000,
+		})
 	} else {
 		toast.add({
 			severity: 'error',
@@ -509,16 +519,34 @@ function copyToClipboard(text: string) {
 }
 
 function copyCreationTime() {
-	if (level.value?.creationTime)
+	if (level.value?.creationTime) {
 		copyToClipboard(level.value?.creationTime.getTime().toString())
+		toast.add({
+			severity: 'success',
+			summary: 'Successfully copied creation time',
+			life: 3000,
+		})
+	}
 }
 
 function copyId() {
-	if (level.value?.id) copyToClipboard(level.value?.id)
+	if (level.value?.id) {
+		copyToClipboard(level.value?.id)
+		toast.add({
+			severity: 'success',
+			summary: 'Successfully copied level ID',
+			life: 3000,
+		})
+	}
 }
 
 function shareLevel() {
 	copyToClipboard(window.location.origin + route.fullPath)
+	toast.add({
+		severity: 'success',
+		summary: 'Successfully copied URL to this level',
+		life: 3000,
+	})
 }
 
 function moreLevelsByCreator() {

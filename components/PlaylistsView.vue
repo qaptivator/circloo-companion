@@ -40,6 +40,7 @@ const searchQuery: Ref<string> = ref('')
 const searchModeOptions: Ref<SelectOptions> = ref([
 	{ label: 'Name', value: 'name' },
 	{ label: 'Creator', value: 'creator' },
+	{ label: 'ID', value: 'id' },
 ])
 const searchMode: Ref<SelectOption> = ref({ label: 'Name', value: 'name' })
 
