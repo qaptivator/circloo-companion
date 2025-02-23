@@ -1,4 +1,5 @@
 //import axios from 'axios'
+import { useToast } from 'primevue/usetoast'
 import type { AxiosInstance } from 'axios'
 import { useNuxtApp } from '#app'
 
@@ -53,6 +54,14 @@ async function _postRequest<T>(endpoint: string, payload: any): Promise<T> {
 		return response.data as T
 	} catch (error) {
 		//console.error(error)
+		const toast = useToast()
+		toast.add({
+			severity: 'error',
+			summary: 'HTTPS request failed. See the console for more information',
+			detail:
+				'Contact the developer so that they will fix the issue. Error: thumbnail blob is not a square (width != height)',
+			life: 3000,
+		})
 		throw error
 	}
 }

@@ -62,60 +62,61 @@
 						>{{ level?.walkthroughLink }}</a
 					>
 				</p>
-				<!-- TODO: add the download thumbnail button -->
 				<!-- TODO: add the download button with an api check for blacklisted levels (requested by creator) -->
-				<!-- TODO: add the leaderboard -->
-				<!-- TODO: add the "more levels by <creator>" button. for that i need to handle params in browse.vue -->
-				<div
-					class="mt-8 grid grid-rows-3 lg:grid-rows-2 grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-8 w-fit"
-				>
-					<section>
-						<span class="flex font-bold items-center">
-							<!-- we dont need it here, i think -->
-							<i class="pi pi-play"></i>
-							Finishers
-						</span>
-						<div class="text-3xl">{{ level?.plays }}</div>
-					</section>
-					<section>
-						<span class="flex font-bold items-center">
-							<i class="pi pi-circle mr-1"></i>
-							Completions
-						</span>
-						<div class="text-3xl">{{ level?.totalCompletions }}</div>
-					</section>
-					<section>
-						<span class="flex font-bold items-center">
-							<i class="pi pi-clock mr-1"></i>
-							Average Time
-						</span>
-						<div class="text-3xl">
-							{{ averageDuration }}
-						</div>
-					</section>
-					<section>
-						<span class="flex font-bold items-center">
-							<!-- we dont need it here, i think -->
-							<i class="pi pi-user mr-1"></i>
-							Players
-						</span>
-						<div class="text-3xl">{{ level?.starts }}</div>
-					</section>
-					<section>
-						<span class="flex font-bold items-center">
-							<i class="pi pi-star mr-1"></i>
-							Stars
-						</span>
-						<div class="text-3xl">{{ level?.stars }}</div>
-					</section>
-					<section>
-						<span class="flex font-bold items-center">
-							<i class="pi pi-percentage mr-1"></i>
-							Clear Rate (CR)
-						</span>
-						<div class="text-3xl">{{ clearRate }}%</div>
-					</section>
+				<div class="flex flex-col md:flex-row md:justify-between">
+					<div
+						class="mt-8 grid grid-rows-3 lg:grid-rows-2 grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-8 w-fit"
+					>
+						<section>
+							<span class="flex font-bold items-center">
+								<!-- we dont need it here, i think -->
+								<i class="pi pi-play"></i>
+								Finishers
+							</span>
+							<div class="text-3xl">{{ level?.plays }}</div>
+						</section>
+						<section>
+							<span class="flex font-bold items-center">
+								<i class="pi pi-circle mr-1"></i>
+								Completions
+							</span>
+							<div class="text-3xl">{{ level?.totalCompletions }}</div>
+						</section>
+						<section>
+							<span class="flex font-bold items-center">
+								<i class="pi pi-clock mr-1"></i>
+								Average Time
+							</span>
+							<div class="text-3xl">
+								{{ averageDuration }}
+							</div>
+						</section>
+						<section>
+							<span class="flex font-bold items-center">
+								<!-- we dont need it here, i think -->
+								<i class="pi pi-user mr-1"></i>
+								Players
+							</span>
+							<div class="text-3xl">{{ level?.starts }}</div>
+						</section>
+						<section>
+							<span class="flex font-bold items-center">
+								<i class="pi pi-star mr-1"></i>
+								Stars
+							</span>
+							<div class="text-3xl">{{ level?.stars }}</div>
+						</section>
+						<section>
+							<span class="flex font-bold items-center">
+								<i class="pi pi-percentage mr-1"></i>
+								Clear Rate (CR)
+							</span>
+							<div class="text-3xl">{{ clearRate }}%</div>
+						</section>
+					</div>
+					<div class="rounded-lg dark:bg-black bg-white flex flex-col">h</div>
 				</div>
+
 				<Fieldset
 					legend="Explanation"
 					:toggleable="true"
@@ -274,7 +275,9 @@ const toast = useToast()
 
 const loading = ref(true)
 const invalid = ref(false)
+const failedFetchingLeaderboard = ref(false)
 const level: Ref<Level | undefined> = ref()
+const advInfo: Ref<AdvancedLevelInfo | undefined> = ref()
 
 onMounted(async () => {
 	let levelId = route.params.id
@@ -283,13 +286,21 @@ onMounted(async () => {
 	}
 
 	// im turning it from "definitely string" or "possibly an array" into "definitely an array" lol
-	const levels = await getLevelsById([levelId])
+	const _levels = await getLevelsById([levelId])
+	const _advInfo = await getLevelAdvancedInfo(levelId)
 
-	if (levels.length > 0) {
-		level.value = levels[0]
+	if (_levels.length > 0) {
+		level.value = _levels[0]
 	} else {
 		invalid.value = true
 	}
+
+	if (_advInfo) {
+		advInfo.value = _advInfo
+	} else {
+		failedFetchingLeaderboard.value = true
+	}
+
 	loading.value = false
 })
 

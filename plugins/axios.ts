@@ -8,7 +8,7 @@ const BASE_URL = 'https://circloo-api-vercel.vercel.app/api/'
 export default defineNuxtPlugin((nuxtApp) => {
 	const client: AxiosInstance = axios.create({
 		baseURL: BASE_URL,
-		//timeout: 5000,
+		timeout: 5000,
 		//headers: {
 		//  'Content-Type': 'application/json',
 		//},
