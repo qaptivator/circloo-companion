@@ -15,6 +15,6 @@ export function playlistToQuery(playlist: Playlist): string {
 }
 
 export function queryToPlaylist(query: string): Playlist {
-	return JSON.parse(decodeURIComponent(query))
+	return JSON.parse(decodeURIComponent(query)) as Playlist
 	//return JSON.parse(LZString.decompressFromEncodedURIComponent(query))
 }
