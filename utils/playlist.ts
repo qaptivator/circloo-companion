@@ -8,12 +8,13 @@ export type Playlist = {
 }
 
 export function playlistToQuery(playlist: Playlist): string {
-	//return JSON.stringify(playlist)
+	return JSON.stringify(playlist)
 	//return encodeURIComponent(JSON.stringify(playlist))
 	// raw string is big, base64 is bigger, base65536 is MUCH bigger, LZString is compact
-	return LZString.compressToEncodedURIComponent(JSON.stringify(playlist))
+	//return LZString.compressToEncodedURIComponent(JSON.stringify(playlist))
 }
 
 export function queryToPlaylist(query: string): Playlist {
-	return JSON.parse(LZString.decompressFromEncodedURIComponent(query))
+	return JSON.parse(decodeURIComponent(query))
+	//return JSON.parse(LZString.decompressFromEncodedURIComponent(query))
 }
