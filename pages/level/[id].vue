@@ -62,7 +62,6 @@
 						>{{ level?.walkthroughLink }}</a
 					>
 				</p>
-				<!-- TODO: add the download button with an api check for blacklisted levels (requested by creator) -->
 				<div class="flex flex-col md:flex-row md:justify-between">
 					<div
 						class="mt-8 grid grid-rows-3 lg:grid-rows-2 grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-8 w-fit"
@@ -252,8 +251,8 @@
 					></Button>
 					<Button
 						@click="downloadLevel"
-						disabled
-						label="Download level content (WIP)"
+						:disabled="!level?.content"
+						label="Download level content"
 					></Button>
 					<Button
 						@click="shareLevel"
@@ -334,7 +333,22 @@ onMounted(async () => {
 	loading.value = false
 })
 
-function downloadLevel() {}
+function downloadLevel() {
+	if (level.value?.content) {
+		copyToClipboard(level.value?.content)
+		toast.add({
+			severity: 'success',
+			summary: 'Successfully copied level content',
+			life: 3000,
+		})
+	} else {
+		toast.add({
+			severity: 'error',
+			summary: 'This level is not downloadable!',
+			life: 3000,
+		})
+	}
+}
 
 /*const thumbnailRef = ref()
 function downloadThumbnail() {

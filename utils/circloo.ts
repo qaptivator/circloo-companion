@@ -10,8 +10,8 @@ function useAxios(): AxiosInstance {
 
 //const BASE_URL = 'https://circloo-api-vercel.vercel.app/api/'
 export const LATEST_VERSION = 9
+export const NO_DOWNLOAD_TAG = '-nodwl'
 const DEVICE_ID = '0'
-const NO_DOWNLOAD_TAG = '-nodwl'
 
 // (argument0 == "Unmodded" ? "latest" : argument0)
 export enum SortMode {
@@ -431,6 +431,11 @@ async function _sanitizeLevel(rawLevel: _RawLevel): Promise<Level> {
 		newModerationStatus = ModerationStatus.Unmodded
 	} else if (parseInt(rawLevel.moderationStatus) === 1) {
 		newModerationStatus = ModerationStatus.Modded
+	}
+
+	// TODO: make this actually be enforced in the backend
+	if (rawLevel.description.includes(NO_DOWNLOAD_TAG)) {
+		rawLevel.content = ''
 	}
 
 	return {
