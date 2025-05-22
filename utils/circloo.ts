@@ -11,6 +11,7 @@ function useAxios(): AxiosInstance {
 //const BASE_URL = 'https://circloo-api-vercel.vercel.app/api/'
 export const LATEST_VERSION = 9
 const DEVICE_ID = '0'
+const NO_DOWNLOAD_TAG = '-nodwl'
 
 // (argument0 == "Unmodded" ? "latest" : argument0)
 export enum SortMode {
@@ -41,7 +42,11 @@ function _getBasicPayload() {
 	}
 }
 
-async function _postRequest<T>(endpoint: string, payload: any): Promise<T> {
+async function _postRequest<T>(
+	endpoint: string,
+	payload: any,
+	ignoreLevel: boolean = false
+): Promise<T> {
 	try {
 		const axios = useAxios()
 		//const response = await axios.post(BASE_URL + endpoint, payload)
@@ -52,7 +57,7 @@ async function _postRequest<T>(endpoint: string, payload: any): Promise<T> {
 			params: payload, // im such a dumb dumb, i should use params instead of data (body)!
 			// dumb dumb axios converted my ?levels= to ?level= because of some funny serialization shenanigans
 			paramsSerializer: (v) => {
-				if (v.level && !v.levels) {
+				if (v.level && !v.levels && !ignoreLevel) {
 					v.levels = v.level
 					v.level = undefined
 				}
@@ -633,7 +638,6 @@ export async function getLevelsById(
 		deviceID: DEVICE_ID,
 		//version: LATEST_VERSION, // its not needed here wow
 	}
-	console.log('payload', payload)
 
 	const response = await _postRequest<GetLevelsRawResponse>(
 		'GetLevelsById',
@@ -674,9 +678,21 @@ export async function getLevelAdvancedInfo(
 	}
 
 	const response = await _postRequest<AdvancedLevelInfo>(
-		'GetLevelsById',
-		payload
+		'GetLevelAdvancedInfo',
+		payload,
+		true
 	)
 
 	return response
+}
+
+export function formatScore(score: number) {
+	const seconds = score / 60
+	const minutes = Math.floor(seconds / 60)
+	const remainingSeconds = Math.floor(seconds % 60)
+	const milliseconds = Math.floor((seconds % 1) * 100)
+	const formattedScore = `${minutes}:${remainingSeconds
+		.toString()
+		.padStart(2, '0')}:${milliseconds.toString().padStart(2, '0')}`
+	return formattedScore
 }

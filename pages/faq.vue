@@ -18,7 +18,7 @@
 				The invite link is in the index page (click on the Icon at the sidebar).
 			</p>
 		</div>
-		<div>
+		<!--<div>
 			<span class="font-bold text-xl"
 				>How can I request my level to be blacklisted from downloading?</span
 			>
@@ -26,7 +26,7 @@
 				Contact "captivator" at Discord. You can also talk to him directly in
 				Florian's Games discord server.
 			</p>
-		</div>
+		</div>-->
 	</div>
 </template>
 <script setup lang="ts"></script>

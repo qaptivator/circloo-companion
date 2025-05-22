@@ -114,7 +114,37 @@
 							<div class="text-3xl">{{ clearRate }}%</div>
 						</section>
 					</div>
-					<div class="rounded-lg dark:bg-black bg-white flex flex-col">h</div>
+					<div class="rounded-lg dark:bg-black bg-white flex flex-col w-fit">
+						<span class="p-2 text-xl font-bold"> Leaderboard </span>
+						<div
+							v-if="!advInfo?.leaderboard"
+							class="flex p-2"
+						>
+							No Leaderboard Entries
+						</div>
+						<div
+							v-for="(entry, index) in advInfo?.leaderboard"
+							class="flex justify-between p-2"
+							:key="index"
+							:style="{
+								color:
+									index === 0
+										? '#fcb103'
+										: index === 1
+										? '#b3b3b3'
+										: index === 2
+										? '#cd7f32'
+										: 'inherit',
+							}"
+						>
+							<span class="font-semibold mr-10">
+								{{ index + 1 }}: {{ entry.name }}
+							</span>
+							<span>
+								{{ formatScore(entry.score) }}
+							</span>
+						</div>
+					</div>
 				</div>
 
 				<Fieldset
@@ -552,7 +582,9 @@ function copyId() {
 }
 
 function shareLevel() {
-	copyToClipboard(window.location.origin + route.fullPath)
+	copyToClipboard(
+		window.location.origin + '/circloo-companion' + route.fullPath
+	)
 	toast.add({
 		severity: 'success',
 		summary: 'Successfully copied URL to this level',
