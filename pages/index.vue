@@ -74,7 +74,7 @@
 		>
 			This website is not affiliated with circloO nor Florian van Strien.
 			Licensed under GPL-3.0. Static website hosted on GitHub Pages. Backend
-			hosted on Vercel.
+			hosted on Vercel. CircloO API version {{ LATEST_VERSION }}.
 		</footer>
 	</div>
 </template>

@@ -14,13 +14,27 @@
 }
 */
 
-.open-sans {
-	font-family: 'Open Sans', serif;
-	font-optical-sizing: auto;
-	font-variation-settings: 'wdth' 100;
-}
-
 @layer base {
+	.open-sans {
+		font-family: 'Open Sans', serif;
+		font-optical-sizing: auto;
+		font-variation-settings: 'wdth' 100;
+	}
+
+	:root {
+		--level-color: white;
+		--level-stroke: black;
+	}
+
+	.level-text-color {
+		color: var(--level-color);
+	}
+
+	.level-text-stroke {
+		text-shadow: -1px -1px 0 var(--level-stroke), 1px -1px 0 var(--level-stroke),
+			-1px 1px 0 var(--level-stroke), 1px 1px 0 var(--level-stroke);
+	}
+
 	a {
 		@apply text-blue-400 hover:underline decoration-1;
 	}

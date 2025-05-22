@@ -2,6 +2,7 @@ import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import { defineNuxtPlugin } from '#app'
 import { AxiosThrottler } from 'axios-throttler'
+//import ToastService from 'primevue/toastservice'
 
 const BASE_URL = 'https://circloo-api-vercel.vercel.app/api/'
 
@@ -14,6 +15,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 		//},
 	})
 	AxiosThrottler.throttle(client, AxiosThrottler.rps(1))
+
+	//nuxtApp.vueApp.use(ToastService)
 
 	/*return {
 		provide: {
