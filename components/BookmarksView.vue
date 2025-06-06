@@ -17,6 +17,7 @@
 const bookmarks = ref<LevelMetadata[]>([])
 const levels = ref<Level[]>([])
 
+// TODO: add pagination here for the bookmarked levels (im just lazy rn)
 onMounted(async () => {
 	const metadatas = getAllLevelMetadata()
 	bookmarks.value = metadatas.filter((metadata) => metadata.bookmarked)
