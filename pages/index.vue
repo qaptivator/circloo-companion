@@ -24,8 +24,9 @@
 			</li>
 		</ul>
 		<span class="text-sm opacity-50"
-			>* Not all levels can be downloaded. The level creator can request their
-			level to be non-downloadable, putting it in a blacklist.
+			>* Not all levels can be downloaded. The level creator can add special
+			text "{{ NO_DOWNLOAD_TAG }}" to their level's description to mark it as
+			undownloadable.
 		</span>
 		<Button
 			class="!mt-8 !w-64"

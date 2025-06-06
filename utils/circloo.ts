@@ -701,3 +701,48 @@ export function formatScore(score: number) {
 		.padStart(2, '0')}:${milliseconds.toString().padStart(2, '0')}`
 	return formattedScore
 }
+
+/* --------- Level Metadata (my own data stored specifically for this website) --------- */
+
+const LEVEL_METADATA_LS_NAME = 'level_metadata'
+
+export type LevelMetadata = {
+	id: LevelId
+	bookmarked: boolean
+}
+
+export function getLevelMetadata(level: Level): LevelMetadata {
+	const DEFAULT_METADATA = {
+		id: level.id,
+		bookmarked: false,
+	}
+
+	const metadatas: LevelMetadata[] = JSON.parse(
+		localStorage.getItem(LEVEL_METADATA_LS_NAME) || '{}'
+	)
+	if (metadatas && metadatas.length > 0) {
+		const metadata = metadatas.find((v) => v.id === level.id)
+		return metadata || DEFAULT_METADATA
+	} else {
+		return DEFAULT_METADATA
+	}
+}
+
+export function setLevelMetadata(level: Level, metadata: LevelMetadata) {
+	const metadatas: LevelMetadata[] = JSON.parse(
+		localStorage.getItem(LEVEL_METADATA_LS_NAME) || '[]'
+	)
+
+	const existingIndex = metadatas.findIndex((v) => v.id === level.id)
+	if (existingIndex !== -1) {
+		metadatas[existingIndex] = Object.assign(metadatas[existingIndex], metadata)
+	} else {
+		metadatas.push(metadata)
+	}
+
+	localStorage.setItem(LEVEL_METADATA_LS_NAME, JSON.stringify(metadatas))
+}
+
+export function getAllLevelMetadata(): LevelMetadata[] {
+	return JSON.parse(localStorage.getItem(LEVEL_METADATA_LS_NAME) || '[]')
+}

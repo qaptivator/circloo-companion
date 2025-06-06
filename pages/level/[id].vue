@@ -20,9 +20,9 @@
 		>
 			<h1 class="text-4xl mb-4">Level not found</h1>
 			<Button
+				@click="$router.back()"
 				as="router-link"
 				label="Go back"
-				to="/browse"
 			></Button>
 		</div>
 		<!-- v-show just doesnt render the element, but it is still processed -->
@@ -36,7 +36,8 @@
 					ref="thumbnailRef"
 					:level="level"
 					class="!w-96 !h-96"
-			/></client-only>
+				/>
+			</client-only>
 
 			<div
 				class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-100 w-full h-full p-8 text-sm lg:text-xl"
@@ -238,25 +239,40 @@
 				<!-- wait, i think its actually better to use gap instead of space in flexboxes and grids. edit: i eventually just ended up using gap lol -->
 				<div class="mt-8 flex flex-wrap gap-4">
 					<Button
+						@click="bookmarkLevel"
+						:label="
+							levelMetadata?.bookmarked ? 'Unbookmark level' : 'Bookmark level'
+						"
+						:variant="levelMetadata?.bookmarked ? undefined : 'outlined'"
+					></Button>
+					<Button
 						@click="moreLevelsByCreator"
 						:label="`More levels by ${level?.creator}`"
 					></Button>
 					<Button
+						@click="shareLevel"
+						label="Share level"
+					></Button>
+					<Button
+						@click="$router.back()"
+						label="Go back"
+					></Button>
+
+					<Button
 						@click="downloadThumbnail"
 						label="Download thumbnail as PNG"
+						severity="secondary"
 					></Button>
 					<Button
 						@click="downloadRawThumbnail"
 						label="Download thumbnail only with borders"
+						severity="secondary"
 					></Button>
 					<Button
 						@click="downloadLevel"
 						:disabled="!level?.content"
 						label="Download level content"
-					></Button>
-					<Button
-						@click="shareLevel"
-						label="Share level"
+						severity="secondary"
 					></Button>
 				</div>
 				<div class="mt-8 flex items-center">
@@ -320,6 +336,7 @@ onMounted(async () => {
 
 	if (_levels.length > 0) {
 		level.value = _levels[0]
+		levelMetadata.value = getLevelMetadata(level.value)
 	} else {
 		invalid.value = true
 	}
@@ -610,6 +627,24 @@ function moreLevelsByCreator() {
 	navigateTo(
 		`/browse?searchMode=creator&searchQuery=${level.value?.creator}&sortMode=newest&filterMode=featured&duration=none&page=1&itemsPerPage=10`
 	)
+}
+
+const levelMetadata = ref<LevelMetadata>()
+function bookmarkLevel() {
+	if (!level.value) return
+
+	const metadata = getLevelMetadata(level.value)
+	metadata.bookmarked = !metadata.bookmarked
+	levelMetadata.value = metadata
+	setLevelMetadata(level.value, metadata)
+
+	toast.add({
+		severity: 'success',
+		summary: metadata.bookmarked
+			? 'Successfully bookmarked level'
+			: 'Successfully unbookmarked level',
+		life: 3000,
+	})
 }
 </script>
 <style scoped lang="css"></style>

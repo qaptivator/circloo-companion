@@ -13,6 +13,7 @@
 				}"
 			>
 				<Tab value="0">Search</Tab>
+				<Tab value="4">Bookmarks</Tab>
 				<Tab
 					value="2"
 					disabled
@@ -36,6 +37,9 @@
 			>
 				<TabPanel value="0">
 					<SearchView />
+				</TabPanel>
+				<TabPanel value="4">
+					<BookmarksView />
 				</TabPanel>
 				<TabPanel value="1">
 					<PlaylistsView />
