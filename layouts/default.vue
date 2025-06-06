@@ -67,6 +67,17 @@
 					></Button>-->
 					</li>
 					<li class="bg-inherit">
+						<TransparentButton @click="navigateTo('/bookmarks')">
+							<i class="pi pi-bookmark"></i>
+							<span v-if="isDesktop">Bookmarks</span>
+							<!--<NuxtLink
+							to="/favorite"
+							class="text-nowrap text-white"
+							>Favorited (WIP)</NuxtLink
+						>-->
+						</TransparentButton>
+					</li>
+					<li class="bg-inherit">
 						<TransparentButton @click="navigateTo('/faq')">
 							<i class="pi pi-question-circle"></i>
 							<span v-if="isDesktop">FAQ</span>

@@ -13,7 +13,6 @@
 				}"
 			>
 				<Tab value="0">Search</Tab>
-				<Tab value="4">Bookmarks</Tab>
 				<Tab
 					value="2"
 					disabled
@@ -38,9 +37,6 @@
 				<TabPanel value="0">
 					<SearchView />
 				</TabPanel>
-				<TabPanel value="4">
-					<BookmarksView />
-				</TabPanel>
 				<TabPanel value="1">
 					<PlaylistsView />
 				</TabPanel>
@@ -62,38 +58,5 @@
 		</Tabs>
 	</div>
 </template>
-<script setup lang="ts">
-/*import axios from 'axios'
-function test() {
-	axios({
-		method: 'GET',
-		url: 'https://circloo-api-vercel.vercel.app/api/GetLevelsDaily',
-		params: {
-			version: 8,
-			deviceID: 0,
-		},
-	}).then((res) => {
-		console.log(res.data)
-	})
-}
-function test2() {
-	axios({
-		method: 'POST',
-		url: 'https://circloo-api-vercel.vercel.app/api/GetLevels',
-		// params or data?
-		params: {
-			sortMode: 'latest',
-			deviceID: 0,
-			page: 0,
-			itemsPerPage: 10,
-			spec: 'modded',
-			query: 'sort:newest',
-			version: 8,
-			supportsCollections: 2,
-		},
-	}).then((res) => {
-		console.log(res.data)
-	})
-}*/
-</script>
+<script setup lang="ts"></script>
 <style scoped lang="css"></style>

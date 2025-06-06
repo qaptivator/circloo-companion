@@ -15,7 +15,12 @@
 				>Where can I join Florian's Games Discord server?</span
 			>
 			<p class="ml-5">
-				The invite link is in the index page (click on the Icon at the sidebar).
+				The invite link to the discord server (13+):
+				<NuxtLink
+					to="https://discord.gg/r4H25JM"
+					target="_blank"
+					>Florian's Games</NuxtLink
+				>
 			</p>
 		</div>
 		<div>

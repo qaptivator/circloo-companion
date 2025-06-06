@@ -11,9 +11,7 @@
 			<li>/// browse the player created levels library</li>
 			<li>/// see advanced info about levels such as clear rates</li>
 			<li>/// download level thumbnail and content*</li>
-			<li class="line-through">
-				/// bookmark your favorite levels and view them later (WORK IN PROGRESS)
-			</li>
+			<li>/// bookmark your favorite levels and view them later</li>
 			<li class="line-through">
 				/// view comunity made playlists, which will include useful template
 				levels to creators (WORK IN PROGRESS)

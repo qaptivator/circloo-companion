@@ -16,6 +16,7 @@
 <script setup lang="ts">
 const bookmarks = ref<LevelMetadata[]>([])
 const levels = ref<Level[]>([])
+
 onMounted(async () => {
 	const metadatas = getAllLevelMetadata()
 	bookmarks.value = metadatas.filter((metadata) => metadata.bookmarked)
