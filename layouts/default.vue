@@ -47,15 +47,13 @@
 				<ul class="text-2xl list-none !bg-inherit">
 					<li class="!bg-inherit">
 						<!-- i just had to use my component here, im sorry -->
-						<TransparentButton @click="navigateTo('/browse')">
-							<i class="pi pi-globe"></i>
-							<span v-if="isDesktop">Browse</span>
-							<!--<NuxtLink
-							to="/browse"
-							class="text-nowrap text-white"
-							>Browse</NuxtLink
-						>-->
-						</TransparentButton>
+						<NuxtLink to="/browse">
+							<TransparentButton class="!text-white">
+								<i class="pi pi-globe"></i>
+								<span v-if="isDesktop">Browse</span>
+							</TransparentButton>
+						</NuxtLink>
+
 						<!-- todo: make this somehow use primevue components -->
 						<!--<Button
 						label="Browse"
@@ -67,37 +65,20 @@
 					></Button>-->
 					</li>
 					<li class="bg-inherit">
-						<TransparentButton @click="navigateTo('/bookmarks')">
-							<i class="pi pi-bookmark"></i>
-							<span v-if="isDesktop">Bookmarks</span>
-							<!--<NuxtLink
-							to="/favorite"
-							class="text-nowrap text-white"
-							>Favorited (WIP)</NuxtLink
-						>-->
-						</TransparentButton>
+						<NuxtLink to="/bookmarks">
+							<TransparentButton class="!text-white">
+								<i class="pi pi-bookmark"></i>
+								<span v-if="isDesktop">Bookmarks</span>
+							</TransparentButton>
+						</NuxtLink>
 					</li>
 					<li class="bg-inherit">
-						<TransparentButton @click="navigateTo('/faq')">
-							<i class="pi pi-question-circle"></i>
-							<span v-if="isDesktop">FAQ</span>
-							<!--<NuxtLink
-							to="/favorite"
-							class="text-nowrap text-white"
-							>Favorited (WIP)</NuxtLink
-						>-->
-						</TransparentButton>
-					</li>
-					<li class="bg-inherit">
-						<TransparentButton disabled>
-							<i class="pi pi-star"></i>
-							<span v-if="isDesktop">Favorited (WIP)</span>
-							<!--<NuxtLink
-							to="/favorite"
-							class="text-nowrap text-white"
-							>Favorited (WIP)</NuxtLink
-						>-->
-						</TransparentButton>
+						<NuxtLink to="/faq">
+							<TransparentButton class="!text-white">
+								<i class="pi pi-question-circle"></i>
+								<span v-if="isDesktop">FAQ</span>
+							</TransparentButton>
+						</NuxtLink>
 					</li>
 					<li class="bg-inherit">
 						<TransparentButton disabled>

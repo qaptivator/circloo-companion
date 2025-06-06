@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col space-y-4 items-center">
 		<div v-if="bookmarks.length === 0">
-			You have no bookmarks yet. Go to the search page to bookmark levels.
+			You have no bookmarks yet. Go to the browse page to bookmark levels.
 		</div>
 		<div
 			v-else
