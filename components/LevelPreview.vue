@@ -1,7 +1,7 @@
 <template>
-	<div
-		@click="clicked"
-		class="w-32 h-32 relative cursor-pointer"
+	<NuxtLink
+		:to="`/level/${props.level?.id}`"
+		class="!w-32 !h-32 !relative !cursor-pointer"
 	>
 		<LevelThumbnail
 			:level="props.level"
@@ -9,10 +9,10 @@
 		/>
 		<i
 			v-if="props.level?.moderationStatus === ModerationStatus.Unmodded"
-			class="pi pi-lock absolute top-0 left-0 opacity-20 text-black dark:text-white"
+			class="pi pi-lock !absolute !top-0 !left-0 opacity-20 text-black dark:text-white"
 		></i>
 		<div
-			class="w-full h-full absolute top-0 left-0 flex flex-col justify-center items-center level-text-color level-text-stroke text-sm"
+			class="!w-32 !h-32 !absolute !top-0 !left-0 !flex !flex-col !justify-center !items-center level-text-color level-text-stroke text-sm"
 		>
 			<!-- TODO: fix the name overflowing -->
 			<h1 class="font-bold">{{ props.level?.name }}</h1>
@@ -33,7 +33,7 @@
 				{{ clearRate }}
 			</div>
 		</div>
-	</div>
+	</NuxtLink>
 </template>
 <script setup lang="ts">
 //import type { ModelRef } from 'vue'
