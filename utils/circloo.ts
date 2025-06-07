@@ -410,6 +410,9 @@ async function _sanitizeLevel(rawLevel: _RawLevel): Promise<Level> {
 
 	let newColor = 0
 	const colorsIndex = rawLevel.content.indexOf('COLORS')
+	if (rawLevel.id === 'db2a0e27-7836-4219-acbe-c83a0c80f4f5') {
+		console.log('SPECIAL colorsIndex:', colorsIndex, rawLevel.color)
+	}
 	//console.log('colorsIndex', colorsIndex)
 	if (colorsIndex === -1) {
 		newColor = _colorFromRawLevel()

@@ -57,5 +57,22 @@ const borderColor = computed(() => {
 		return 'rgb(255,255,0)'
 	}
 })
+
+onMounted(() => {
+	document.addEventListener('keypress', (event: KeyboardEvent) => {
+		if (
+			event.key === 'b' &&
+			props.level &&
+			props?.level.id === 'db2a0e27-7836-4219-acbe-c83a0c80f4f5'
+		) {
+			console.log(
+				'the search view color for the weird level:',
+				backgroundColor.value,
+				'raw color value:',
+				props.level.color
+			)
+		}
+	})
+})
 </script>
 <style scoped lang="css"></style>
