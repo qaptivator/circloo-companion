@@ -1,0 +1,1 @@
+import{_ as e,c as t,o}from"./-1Vb8plG.js";const c={};function r(a,n){return o(),t("div",null,"how did you end up here? i said that it was WORK IN PROGRESS!!!")}const i=e(c,[["render",r]]);export{i as default};
