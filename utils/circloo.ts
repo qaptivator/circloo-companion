@@ -344,6 +344,36 @@ export function getColorPalette(level: Level): LevelColorPalette {
 	return getColorPaletteRaw(level.color)
 }
 
+export function unblendColors(
+	blendedColor: Vector3,
+	colorB: Vector3,
+	ratio: number
+): Vector3 {
+	if (ratio === 1) {
+		throw new Error(
+			'Cannot unblend if ratio is 1 (blended color is purely colorB)'
+		)
+	}
+
+	const unblendedRatio = 1 - ratio
+	const r = (blendedColor.x - colorB.x * ratio) / unblendedRatio
+	const g = (blendedColor.y - colorB.y * ratio) / unblendedRatio
+	const b = (blendedColor.z - colorB.z * ratio) / unblendedRatio
+
+	return {
+		x: Math.max(0, Math.min(255, Math.round(r))),
+		y: Math.max(0, Math.min(255, Math.round(g))),
+		z: Math.max(0, Math.min(255, Math.round(b))),
+	}
+}
+
+export function getHueFromBackgroundColor(backgroundColor: Vector3): number {
+	const c_gray = { x: 128, y: 128, z: 128 }
+	const col = unblendColors(backgroundColor, c_gray, 0.3)
+	const hsvCol = rgbToHsv(col)
+	return Math.round(hsvCol.x * 255)
+}
+
 const _ZERO: Vector3 = {
 	x: 0,
 	y: 0,
@@ -400,8 +430,15 @@ async function _sanitizeLevel(rawLevel: _RawLevel): Promise<Level> {
 			y: g,
 			z: b,
 		}*/
-		// todo: fix this temporary solution
-		return r
+		// to do fix this temporary solution
+		//return r
+		// FIXED IT! (it took such a while to find this lol)
+
+		return getHueFromBackgroundColor({
+			x: r,
+			y: g,
+			z: b,
+		})
 	}
 
 	// https://stackoverflow.com/questions/12168909/blob-from-dataurl
@@ -410,9 +447,15 @@ async function _sanitizeLevel(rawLevel: _RawLevel): Promise<Level> {
 
 	let newColor = 0
 	const colorsIndex = rawLevel.content.indexOf('COLORS')
-	if (rawLevel.id === 'db2a0e27-7836-4219-acbe-c83a0c80f4f5') {
-		console.log('SPECIAL colorsIndex:', colorsIndex, rawLevel.color)
-	}
+	/*if (rawLevel.id === 'db2a0e27-7836-4219-acbe-c83a0c80f4f5') {
+		console.log(
+			'SPECIAL colorsIndex:',
+			colorsIndex,
+			rawLevel.color,
+			rawLevel.content
+		)
+		// NEW ISSUE: just for this level, the level content is set to "please-request" instead, so i cannot find the COLORS tag. but when i go to the level page, it works fine. really weird.
+	}*/
 	//console.log('colorsIndex', colorsIndex)
 	if (colorsIndex === -1) {
 		newColor = _colorFromRawLevel()
