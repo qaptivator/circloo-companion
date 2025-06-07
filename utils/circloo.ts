@@ -434,7 +434,10 @@ async function _sanitizeLevel(rawLevel: _RawLevel): Promise<Level> {
 	}
 
 	// TODO: make this actually be enforced in the backend
-	if (rawLevel.description.includes(NO_DOWNLOAD_TAG)) {
+	if (
+		rawLevel?.description &&
+		rawLevel?.description.includes(NO_DOWNLOAD_TAG)
+	) {
 		rawLevel.content = ''
 	}
 
