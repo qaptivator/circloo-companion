@@ -162,14 +162,14 @@
 					class="!mt-4 !text-sm !opacity-50 !w-min !text-nowrap"
 				>
 					<footer class="m-0">
-						Completions is amount of times your level was completed (also counts
-						completions by the same person).<br />
-						Finishers is amount of people completed the level.<br />
+						Completions is the amount of times your level was completed (also
+						counts completions by the same person).<br />
+						Finishers is amount of people who completed the level.<br />
 						Players is amount of people who started the level, but not
-						necessarily completed the level.<br />
-						Clear rate is finishers divided by players. This show the
-						approximate difficulty of the level.<br />The lower the clear rate,
-						the harder the level.
+						necessarily completed it.<br />
+						Clear rate is finishers divided by players, shown as a percentage.
+						This shows the approximate difficulty of a level.<br />The lower the
+						clear rate, the harder the level.
 					</footer>
 				</Fieldset>
 				<div class="mt-8 flex flex-col">
@@ -603,7 +603,7 @@ function copyCreationTime() {
 		copyToClipboard(level.value?.creationTime.getTime().toString())
 		toast.add({
 			severity: 'success',
-			summary: 'Successfully copied creation time',
+			summary: 'Successfully copied the creation time (in unix time)',
 			life: 3000,
 		})
 	}
@@ -614,7 +614,7 @@ function copyId() {
 		copyToClipboard(level.value?.id)
 		toast.add({
 			severity: 'success',
-			summary: 'Successfully copied level ID',
+			summary: 'Successfully copied the level ID',
 			life: 3000,
 		})
 	}
@@ -626,7 +626,7 @@ function shareLevel() {
 	)
 	toast.add({
 		severity: 'success',
-		summary: 'Successfully copied URL to this level',
+		summary: 'Successfully copied the URL to this level',
 		life: 3000,
 	})
 }
