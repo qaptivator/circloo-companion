@@ -649,8 +649,8 @@ function bookmarkLevel() {
 	toast.add({
 		severity: 'success',
 		summary: metadata.bookmarked
-			? 'Successfully bookmarked level'
-			: 'Successfully unbookmarked level',
+			? 'Successfully bookmarked the level'
+			: 'Successfully unbookmarked the level',
 		life: 3000,
 	})
 }
