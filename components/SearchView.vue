@@ -21,8 +21,10 @@
 		</div>
 
 		<!-- filters and stuff -->
-		<div class="flex flex-wrap md:flex-nowrap gap-4 justify-center">
-			<!-- TODO: add "search by creator" option, which just prepends "Levels by " to the search query -->
+		<div
+			v-if="showFetchOptions"
+			class="flex flex-wrap md:flex-nowrap gap-4 justify-center"
+		>
 			<FloatLabel variant="on">
 				<Select
 					v-model="sortMode"
@@ -72,7 +74,7 @@
 
 		<!-- other settings-->
 		<div
-			v-if="showAdvanced"
+			v-if="showAdvanced || !showFetchOptions"
 			class="flex space-x-4 justify-center"
 		>
 			<!-- todo: add more options such as "show all levels" or "version number" -->
@@ -118,6 +120,12 @@
 				</InputNumber>
 				<label for="itemsPerPage-select">Items per page</label>
 			</FloatLabel>
+			<Button
+				@click="resetOptions"
+				variant="outlined"
+				severity="contrast"
+				label="Reset options"
+			></Button>
 		</div>
 
 		<!-- the ACTUAL page selector -->
@@ -147,6 +155,7 @@
 		<!-- the actual levels -->
 		<!-- todo: handle level previews overflowing on smaller devices -->
 		<div
+			v-if="!loading"
 			class="grid grid-rows-5 grid-cols-2 md:grid-rows-2 md:grid-cols-5 gap-4 relative"
 		>
 			<div v-for="level in fetchedLevels">
@@ -164,14 +173,33 @@
 				icon="pi pi-chevron-right"
 			></Button>-->
 		</div>
-		<div v-if="fetchedLevels.length === 0">
+		<div v-if="loading">
+			<i
+				class="pi pi-spin pi-spinner"
+				style="font-size: 2rem"
+			></i>
+		</div>
+		<div
+			v-else-if="errorOccurred"
+			class="text-red-400"
+		>
+			An error occurred while fetching levels. See the console for further
+			details.
+		</div>
+		<div v-else-if="fetchedLevels.length === 0">
 			No results found (or you're offline)
 		</div>
 	</div>
 </template>
 <script setup lang="ts">
+import { expect } from 'vitest'
+
 const router = useRouter()
 const route = useRoute()
+
+const SEARCH_QUERY_TIMEOUT_MS = 500
+const loading = ref(false)
+const errorOccurred = ref(true)
 
 type SelectOption =
 	| {
@@ -234,9 +262,20 @@ const versionNumber: Ref<number> = ref(LATEST_VERSION)
 
 const fetchedLevels: Ref<Level[]> = ref([])
 const showAdvanced: Ref<boolean> = ref(false)
+const showFetchOptions = computed(() => searchMode.value?.value === 'name')
 
-// todo: add timeout for this. ok, probably not. but idk. maybe i should rate limit this... but vercel should rate limit it for me, am i right?
-watch(searchQuery, fetchLevels)
+const haveSearchQueryChanges = ref(false)
+let searchQueryTimeout: NodeJS.Timeout | undefined
+watch(searchQuery, () => {
+	if (!haveSearchQueryChanges.value) haveSearchQueryChanges.value = true
+	if (searchQueryTimeout) clearTimeout(searchQueryTimeout)
+	searchQueryTimeout = setTimeout(() => {
+		if (haveSearchQueryChanges.value) {
+			haveSearchQueryChanges.value = false
+			fetchLevels()
+		}
+	}, SEARCH_QUERY_TIMEOUT_MS)
+})
 watch(searchMode, fetchLevels)
 watch(sortMode, fetchLevels)
 watch(filterMode, fetchLevels)
@@ -244,6 +283,12 @@ watch(duration, fetchLevels)
 watch(page, fetchLevels)
 watch(itemsPerPage, fetchLevels)
 //watch(showAllLevels, fetchLevels)
+
+function resetOptions() {
+	sortMode.value = { label: 'Newest', value: 'newest' }
+	duration.value = { label: 'None', value: 'none' }
+	filterMode.value = [{ label: 'Featured', value: 'featured' }]
+}
 
 type PageParamsQuery = {
 	searchQuery?: string
@@ -394,7 +439,11 @@ async function fetchLevels() {
 	// sortMode
 	// these checks for value in refs are probably useless but whatever
 	// this looks so cursed lol (ref.value.value)
-	if (sortMode.value && sortMode.value?.value) {
+	if (
+		sortMode.value &&
+		sortMode.value?.value &&
+		searchMode.value?.value !== 'id'
+	) {
 		switch (sortMode.value.value) {
 			//case 'newest':
 			// apparently newest doesnt have sort:newest
@@ -438,7 +487,7 @@ async function fetchLevels() {
 	) {
 		filters.push(duration.value?.value)
 	}
-	if (filters && filters.length > 0) {
+	if (filters && filters.length > 0 && searchMode.value?.value !== 'id') {
 		fetchQuery += `filter:${filters.join(',')} `
 	}
 
@@ -454,29 +503,39 @@ async function fetchLevels() {
 		}
 	}
 
-	let levels: Level[] = []
-	if (
-		searchMode.value?.value === 'name' ||
-		searchMode.value?.value === 'creator'
-	) {
-		levels = await getLevels(
-			SortMode.Search,
-			realPage.value,
-			itemsPerPage.value > 0 ? itemsPerPage.value ?? 10 : 10,
-			Spec.Modded,
-			//showAllLevels.value ? Spec.All : Spec.Modded,
-			fetchQuery
-			// versionNumber.value
-		)
-	} else if (searchMode.value?.value === 'id') {
-		levels = await getLevelsById([fetchQuery])
-	}
+	errorOccurred.value = false
+	loading.value = true
+	try {
+		let levels: Level[] = []
+		if (
+			searchMode.value?.value === 'name' ||
+			searchMode.value?.value === 'creator'
+		) {
+			levels = await getLevels(
+				SortMode.Search,
+				realPage.value,
+				itemsPerPage.value > 0 ? itemsPerPage.value ?? 10 : 10,
+				Spec.Modded,
+				//showAllLevels.value ? Spec.All : Spec.Modded,
+				fetchQuery
+				// versionNumber.value
+			)
+		} else if (searchMode.value?.value === 'id') {
+			levels = await getLevelsById([fetchQuery])
+		}
 
-	/* oops, this just prevents any levels from showing if results are not found
-	if (levels.length > 0) {
+		/* oops, this just prevents any levels from showing if results are not found
+		if (levels.length > 0) {
+			fetchedLevels.value = levels
+		}*/
 		fetchedLevels.value = levels
-	}*/
-	fetchedLevels.value = levels
+	} catch (error) {
+		errorOccurred.value = true
+		console.error('Error fetching levels:', error)
+		fetchedLevels.value = []
+	} finally {
+		loading.value = false
+	}
 }
 
 function modifyPage(val: number) {

@@ -4,6 +4,10 @@ import Aura from '@primevue/themes/aura'
 export default defineNuxtConfig({
 	ssr: false, // github pages requires this
 
+	devServer: {
+		port: 3001, // default: 3000
+	},
+
 	app: {
 		head: {
 			title: 'circloO companion',
