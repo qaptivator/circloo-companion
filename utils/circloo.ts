@@ -5,7 +5,16 @@ import { useNuxtApp } from '#app'
 
 function useAxios(): AxiosInstance {
 	const { $axios } = useNuxtApp()
-	return $axios as AxiosInstance
+	const axios = $axios as AxiosInstance
+	/*axios.interceptors.response.use(
+		(response) => response,
+		(error) => {
+			// aborted using AbortController
+			if (error.code === 'ERR_CANCELED') return Promise.resolve({ status: 499 })
+			return Promise.reject(error)
+		}
+	)*/
+	return axios
 }
 
 //const BASE_URL = 'https://circloo-api-vercel.vercel.app/api/'
@@ -45,7 +54,8 @@ function _getBasicPayload() {
 async function _postRequest<T>(
 	endpoint: string,
 	payload: any,
-	ignoreLevel: boolean = false
+	ignoreLevel: boolean = false,
+	signal?: AbortSignal
 ): Promise<T> {
 	try {
 		const axios = useAxios()
@@ -54,6 +64,7 @@ async function _postRequest<T>(
 			method: 'POST',
 			url: endpoint,
 			//url: BASE_URL + endpoint,
+			signal,
 			params: payload, // im such a dumb dumb, i should use params instead of data (body)!
 			// dumb dumb axios converted my ?levels= to ?level= because of some funny serialization shenanigans
 			paramsSerializer: (v) => {
@@ -66,16 +77,16 @@ async function _postRequest<T>(
 		})
 		return response.data as T
 	} catch (error) {
-		//console.error(error)
-		const toast = useToast()
+		throw error
+		//console.error('_postRequest ERROR: ', error)
+		/*const toast = useToast()
 		toast.add({
 			severity: 'error',
-			summary: 'HTTPS request failed. See the console for more information',
-			detail:
-				'Contact the developer so that they will fix the issue. Error: thumbnail blob is not a square (width != height)',
+			summary: 'HTTP request failed. See the console for more information',
+			detail: 'Contact the developer so that they will fix the issue.',
 			life: 3000,
-		})
-		throw error
+		})*/
+		//throw error
 	}
 }
 
@@ -538,6 +549,13 @@ export type GetLevelsRawResponse = {
 export type GetLevelsResponse = Level[]
 
 async function _sanitizeLevels(response: GetLevelsRawResponse) {
+	if (
+		!response ||
+		!response.levels ||
+		!Array.isArray(response.levels) ||
+		response.levels.length === 0
+	)
+		return []
 	let sanitized = []
 	// rookie mistake: using "in" over "of"
 	for (const rawLevel of response.levels) {
@@ -558,7 +576,8 @@ async function _getLevelsRaw(
 	pageNumber: number,
 	itemsPerPage: number,
 	spec: Spec,
-	searchQuery: string
+	searchQuery: string,
+	signal?: AbortSignal
 ): Promise<GetLevelsRawResponse> {
 	const payload: GetLevelsPayload = {
 		sortMode: sortMode,
@@ -577,7 +596,9 @@ async function _getLevelsRaw(
 
 	const response = await _postRequest<GetLevelsRawResponse>(
 		'GetLevels',
-		payload
+		payload,
+		false,
+		signal
 	)
 
 	//return await _sanitizeLevels(response)
@@ -596,10 +617,18 @@ export async function getLevels(
 	pageNumber: number,
 	itemsPerPage: number,
 	spec: Spec,
-	searchQuery: string
+	searchQuery: string,
+	signal?: AbortSignal
 ): Promise<GetLevelsResponse> {
 	return await _sanitizeLevels(
-		await _getLevelsRaw(sortMode, pageNumber, itemsPerPage, spec, searchQuery)
+		await _getLevelsRaw(
+			sortMode,
+			pageNumber,
+			itemsPerPage,
+			spec,
+			searchQuery,
+			signal
+		)
 	)
 }
 

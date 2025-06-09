@@ -304,8 +304,8 @@ type PageParamsQuery = {
 onMounted(() => {
 	//sortMode.value = { label: 'Newest', value: 'newest' }
 	//duration.value = { label: 'None', value: 'none' }
-	fetchLevels()
 	recoverParamsFromRoute()
+	fetchLevels()
 })
 
 const silenceWatchers = ref(false)
@@ -385,10 +385,14 @@ function recoverParamsFromRoute() {
 	silenceWatchers.value = false
 }
 
+//let fetchLevelsAbort: AbortController | null = null
 async function fetchLevels() {
 	if (silenceWatchers.value) return
 	//fetchedLevels.value = []
 	//fetchedLevels.value = await getLevels(sortMode)
+	// yeah sorry i cant fix the issue where the levels are fetched like a million times, and then all the results of the promises underneath just flash on the screen
+	// i wanted to try fixing it with signals but it does nothing to help me fix this
+	//if (fetchLevelsAbort) fetchLevelsAbort.abort()
 
 	// --- router ---
 
@@ -511,6 +515,8 @@ async function fetchLevels() {
 			searchMode.value?.value === 'name' ||
 			searchMode.value?.value === 'creator'
 		) {
+			// create a new abort controller for each fetch, so we can cancel it later if needed
+			//fetchLevelsAbort = new AbortController()
 			levels = await getLevels(
 				SortMode.Search,
 				realPage.value,
@@ -519,8 +525,10 @@ async function fetchLevels() {
 				//showAllLevels.value ? Spec.All : Spec.Modded,
 				fetchQuery
 				// versionNumber.value
+				//fetchLevelsAbort.signal
 			)
 		} else if (searchMode.value?.value === 'id') {
+			// im lazy to implement it here, its not like many people will use id searching anyway (oh wait, i couldve just straight up redirected to the page of a level instead of fetching it from the api)
 			levels = await getLevelsById([fetchQuery])
 		}
 
