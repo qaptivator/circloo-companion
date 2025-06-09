@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col space-y-4 items-center">
+	<div class="flex flex-col gap-4 items-center">
 		<div
 			v-if="!loading"
 			class="grid grid-rows-5 grid-cols-2 md:grid-rows-2 md:grid-cols-5 gap-4 relative"
