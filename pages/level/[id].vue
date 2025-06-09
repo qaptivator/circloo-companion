@@ -2,7 +2,7 @@
 	<div class="w-full h-full">
 		<div
 			v-if="loading && !invalid"
-			class="flex flex-col lg:flex-row space-x-8 w-full h-full"
+			class="flex flex-col xl:flex-row gap-8 w-full h-full"
 		>
 			<Skeleton
 				shape="circle"
@@ -29,7 +29,7 @@
 		<!-- TODO: add AdvancedLevelInfo stats somewhere in the ui (that includes the leaderboard) -->
 		<div
 			v-show="!loading && !invalid"
-			class="flex flex-col lg:flex-row gap-8 w-full h-full"
+			class="flex flex-col xl:flex-row gap-8 w-full h-full"
 		>
 			<client-only>
 				<LevelThumbnail
@@ -40,7 +40,7 @@
 			</client-only>
 
 			<div
-				class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-100 w-full h-full p-8 text-sm lg:text-xl"
+				class="flex flex-col rounded-xl dark:bg-surface-900 bg-gray-100 w-full h-full p-4 md:p-8 text-sm lg:text-xl"
 			>
 				<h1 class="font-bold text-3xl">{{ level?.name }}</h1>
 				<h2 class="opacity-50">by {{ level?.creator }}</h2>
@@ -63,58 +63,66 @@
 						>{{ level?.walkthroughLink }}</a
 					>
 				</p>
-				<div class="flex flex-col md:flex-row md:justify-between">
+				<div class="flex flex-col xl:flex-row xl:justify-between">
 					<div
 						class="mt-8 grid grid-rows-3 lg:grid-rows-2 grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-8 w-fit"
 					>
-						<section>
-							<span class="flex font-bold items-center">
-								<!-- we dont need it here, i think -->
+						<LevelDetailsGrid>
+							<template #title>
 								<i class="pi pi-play"></i>
 								Finishers
-							</span>
-							<div class="text-3xl">{{ level?.plays }}</div>
-						</section>
-						<section>
-							<span class="flex font-bold items-center">
+							</template>
+							<template #value>
+								{{ level?.plays }}
+							</template>
+						</LevelDetailsGrid>
+						<LevelDetailsGrid>
+							<template #title>
 								<i class="pi pi-circle mr-1"></i>
 								Completions
-							</span>
-							<div class="text-3xl">{{ level?.totalCompletions }}</div>
-						</section>
-						<section>
-							<span class="flex font-bold items-center">
+							</template>
+							<template #value>
+								{{ level?.totalCompletions }}
+							</template>
+						</LevelDetailsGrid>
+						<LevelDetailsGrid>
+							<template #title>
 								<i class="pi pi-clock mr-1"></i>
 								Average Time
-							</span>
-							<div class="text-3xl">
+							</template>
+							<template #value>
 								{{ averageDuration }}
-							</div>
-						</section>
-						<section>
-							<span class="flex font-bold items-center">
-								<!-- we dont need it here, i think -->
+							</template>
+						</LevelDetailsGrid>
+						<LevelDetailsGrid>
+							<template #title>
 								<i class="pi pi-user mr-1"></i>
 								Players
-							</span>
-							<div class="text-3xl">{{ level?.starts }}</div>
-						</section>
-						<section>
-							<span class="flex font-bold items-center">
+							</template>
+							<template #value>
+								{{ level?.starts }}
+							</template>
+						</LevelDetailsGrid>
+						<LevelDetailsGrid>
+							<template #title>
 								<i class="pi pi-star mr-1"></i>
 								Stars
-							</span>
-							<div class="text-3xl">{{ level?.stars }}</div>
-						</section>
-						<section>
-							<span class="flex font-bold items-center">
+							</template>
+							<template #value>
+								{{ level?.stars }}
+							</template>
+						</LevelDetailsGrid>
+						<LevelDetailsGrid>
+							<template #title>
 								<i class="pi pi-percentage mr-1"></i>
 								Clear Rate (CR)
-							</span>
-							<div class="text-3xl">{{ clearRate }}%</div>
-						</section>
+							</template>
+							<template #value> {{ clearRate }}% </template>
+						</LevelDetailsGrid>
 					</div>
-					<div class="rounded-lg dark:bg-black bg-white flex flex-col w-fit">
+					<div
+						class="rounded-lg dark:bg-black bg-white flex flex-col w-fit mt-4 xl:mt-0"
+					>
 						<span class="p-2 text-xl font-bold"> Leaderboard </span>
 						<div
 							v-if="!advInfo?.leaderboard"

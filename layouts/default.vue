@@ -1,16 +1,16 @@
 <template>
-	<div class="w-full h-screen flex flex-col">
+	<div class="w-full h-full flex flex-col">
 		<div
 			v-if="!isOnline"
 			class="font-bold text-white bg-red-700 p-2 w-full"
 		>
 			⚠️ You are offline. Some features may not work.
 		</div>
-		<div class="flex h-full">
+		<div class="flex h-full relative">
 			<!--w-64-->
 			<!-- TODO: make this a top bar instead of sidebar -->
 			<aside
-				class="w-16 lg:w-64 h-full text-white p-4 flex flex-col space-y-4 bg-primary-400"
+				class="w-16 lg:w-64 h-screen text-white p-4 flex flex-col gap-4 bg-primary-400"
 			>
 				<!-- should i make the sidebar bg-primary-400? edit: yes i do, or else the buttons just disappear in light mode -->
 				<!-- class="... border-r" style="border-color: var(--p-form-field-border-color)" -->
@@ -93,7 +93,7 @@
 					</li>
 				</ul>
 			</aside>
-			<main class="flex-1 overflow-y-auto h-full p-8">
+			<main class="flex-1 overflow-y-auto h-full max-h-screen p-8">
 				<slot />
 			</main>
 		</div>

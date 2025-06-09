@@ -1,6 +1,12 @@
 <template>
 	<div class="w-full h-full">
-		<div v-if="loading && !invalid"></div>
+		<div v-if="loading && !invalid">
+			<i
+				class="pi pi-spin pi-spinner"
+				style="font-size: 2rem"
+			></i>
+			shhh not done yet
+		</div>
 		<div
 			v-if="!loading && invalid"
 			class="flex flex-col items-center justify-center h-full"
@@ -40,7 +46,7 @@ const invalid = ref(false)
 const playlist: Ref<Playlist | undefined> = ref()
 
 onMounted(async () => {
-	let playlistString = route.query.d
+	/*let playlistString = route.query.d
 	if (typeof playlistString !== 'string') {
 		invalid.value = true
 		return
@@ -51,7 +57,7 @@ onMounted(async () => {
 	if (!playlist.value) {
 		invalid.value = true
 	}
-	loading.value = false
+	loading.value = false*/
 })
 
 const backgroundColor = computed(() => {

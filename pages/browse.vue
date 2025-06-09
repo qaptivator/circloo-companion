@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="w-full flex flex-col items-center justify-center space-y-4 h-full bg-transparent"
+		class="w-full h-full flex flex-col items-center justify-center gap-4 bg-transparent"
 	>
 		<Tabs
 			value="0"
