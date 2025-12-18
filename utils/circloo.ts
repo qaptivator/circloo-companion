@@ -40,6 +40,8 @@ export enum Spec {
 export enum ModerationStatus {
 	Unmodded = 'unmodded', // 0
 	Modded = 'modded', // 1
+	Rejected = 'rejected', // 2
+	LimitedVisibility = 'limited visibility', // 3
 	Unknown = 'unknown',
 }
 
@@ -483,11 +485,16 @@ async function _sanitizeLevel(rawLevel: _RawLevel): Promise<Level> {
 		newColor = parseInt(colorChars.join(''), 10)
 	}
 
+	const _moderationStatus = parseInt(rawLevel.moderationStatus)
 	let newModerationStatus = ModerationStatus.Unknown
-	if (parseInt(rawLevel.moderationStatus) === 0) {
+	if (_moderationStatus === 0) {
 		newModerationStatus = ModerationStatus.Unmodded
-	} else if (parseInt(rawLevel.moderationStatus) === 1) {
+	} else if (_moderationStatus === 1) {
 		newModerationStatus = ModerationStatus.Modded
+	} else if (_moderationStatus === 2) {
+		newModerationStatus = ModerationStatus.Rejected
+	} else if (_moderationStatus === 3) {
+		newModerationStatus = ModerationStatus.LimitedVisibility
 	}
 
 	// TODO: make this actually be enforced in the backend
