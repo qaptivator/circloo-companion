@@ -41,7 +41,7 @@ export enum ModerationStatus {
 	Unmodded = 'unmodded', // 0
 	Modded = 'modded', // 1
 	Rejected = 'rejected', // 2
-	LimitedVisibility = 'limited visibility', // 3
+	LimitedVisibility = 'limited visibility', // 3, only Hell's Run 2 has this lol
 	Unknown = 'unknown',
 }
 
