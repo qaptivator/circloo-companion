@@ -18,7 +18,12 @@ function useAxios(): AxiosInstance {
 }
 
 //const BASE_URL = 'https://circloo-api-vercel.vercel.app/api/'
-export const LATEST_VERSION = 9
+// you have to constantly bump up the levelcode version, but i tested and you can just set it to a higher number and itll work fine
+// the backend compares your levelcode version with the levels on the server, so if youre on an older version you dont see those new levels
+// this isnt a problem for this tool so i will just show all levels... this also means that this can be an option in the ui, but i am way too lazy to implement that
+// maybe you can add the levelcode version as a parameter instead of being hardcoded?
+// you should also show the levelcode version in the level page, but i feel like that goes a bit out of the scope of the tool so idk (but i did add the colors... so idk)
+export const LATEST_VERSION = 999
 export const NO_DOWNLOAD_TAG = '-nodwl'
 const DEVICE_ID = '0'
 
